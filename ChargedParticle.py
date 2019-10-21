@@ -10,14 +10,14 @@ from base import plot3d
 class Particle (object):
 
     def __init__(self, p0=[0, 0, 0], v0=[1, 1, 1]):
-        self.ini_dat = p0 + v0
+        self.init_dat = p0 + v0
         self.q = 1.0
         self.m = 1.0
         self.t0 = 0
 
-    def base_solver(self):
+    def init_solver(self):
         self.solver = ode(self.newton_method).set_integrator('dopri5')
-        self.solver.set_initial_value(self.ini_dat, self.t0)
+        self.solver.set_initial_value(self.init_dat, self.t0)
 
     def newton_method(self, t, dat):
         """
