@@ -42,9 +42,9 @@ class plot3d (object):
     def __init__(self):
         self.fig = plt.figure()
         self.axs = self.fig.add_subplot(111, projection='3d')
-        self.axs.set_aspect('equal')
+        #self.axs.set_aspect('equal')
 
-        self.axs.set_xlabel('z')
+        self.axs.set_xlabel('x')
         self.axs.set_ylabel('y')
         self.axs.set_zlabel('z')
 

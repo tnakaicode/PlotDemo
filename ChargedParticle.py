@@ -4,10 +4,46 @@ import matplotlib.pyplot as plt
 from scipy.integrate import ode
 from mpl_toolkits.mplot3d import Axes3D
 
+from base import plot3d
+
 
 class Particle (object):
 
+    def __init__(self, p0=[0, 0, 0], v0=[1, 1, 1]):
+        self.ini_dat = p0 + v0
+        self.q = 1.0
+        self.m = 1.0
+        self.t0 = 0
+
+    def base_solver(self):
+        self.solver = ode(self.newton_method).set_integrator('dopri5')
+        self.solver.set_initial_value(self.ini_dat, self.t0)
+
+    def newton_method(self, t, dat):
+        """
+        Computes the derivative of the state vector y according to the equation of motion:
+        Y is the state vector (x, y, z, u, v, w) === (position, velocity).
+        returns dY/dt.
+        """
+        x, y, z = dat[0], dat[1], dat[2]
+        u, v, w = dat[3], dat[4], dat[5]
+
+        alpha = self.q / self.m * self.b_field(dat[0:3])
+        return np.array([u, v, w, 0.5, alpha * w + self.e_filed(dat[0:3]), -alpha * v])
+
+    def e_filed(self, xyz):
+        x, y, z = xyz
+        return 10 * np.sign(np.sin(2 * np.pi * x / 25))
+
+    def b_field(self, xyz):
+        x, y, z = xyz
+        return 2 * x + np.sin(2 * np.pi * y / 25) + np.sin(2 * np.pi * z / 25)
+
+
+class ChParticle (plot3d):
+
     def __init__(self):
+        plot3d.__init__(self)
         self.solver = ode(self.newton).set_integrator('dopri5')
         self.solver1 = ode(self.newton1).set_integrator('dopri5')
         self.solver2 = ode(self.newton2).set_integrator('dopri5')
@@ -70,7 +106,7 @@ class Particle (object):
 
 
 if __name__ == '__main__':
-    obj = Particle()
+    obj = ChParticle()
 
     t0 = 0
     x0 = np.array([0, 0, 0])
@@ -88,7 +124,7 @@ if __name__ == '__main__':
 
     pos = []
     t1 = 10
-    dt = 0.05
+    dt = 0.005
     while obj.solver.successful() and obj.solver.t < t1:
         print(obj.solver.t, *obj.solver.y)
         obj.solver.integrate(obj.solver.t + dt)
@@ -96,10 +132,5 @@ if __name__ == '__main__':
 
     pos = np.array(pos)
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot3D(pos[:, 0], pos[:, 1], pos[:, 2])
-    plt.xlabel('x')
-    plt.ylabel('y')
-    ax.set_zlabel('z')
+    obj.axs.plot3D(pos[:, 0], pos[:, 1], pos[:, 2])
     plt.show()
