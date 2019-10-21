@@ -24,7 +24,7 @@ class GenArea (object):
 
     def data_ouput(self):
         dat = np.array(obj.pnt)
-        np.savetxt("../tmp/data_area.txt", dat)
+        np.savetxt("./tmp/data_area.txt", dat)
 
 
 if __name__ == '__main__':
