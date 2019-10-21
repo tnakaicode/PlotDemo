@@ -2,39 +2,49 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
-freqs = np.arange(2, 20, 3)
-
-fig, ax = plt.subplots()
-plt.subplots_adjust(bottom=0.2)
-t = np.arange(0.0, 1.0, 0.001)
-s = np.sin(2 * np.pi * freqs[0] * t)
-l, = plt.plot(t, s, lw=2)
+from base import plot2d
 
 
-class Index(object):
-    ind = 0
+class Index(plot2d):
+
+    def __init__(self):
+        plot2d.__init__(self)
+        self.div_axs()
+
+        self.ind = 0
+        self.freqs = np.arange(2, 20, 3)
+        self.pt = np.arange(0.0, 1.0, 0.001)
+        self.ps = np.sin(2 * np.pi * self.freqs[0] * self.pt)
+        self.pl, = self.axs.plot(self.pt, self.ps, lw=2)
+
+        # plt.subplots_adjust(bottom=0.2)
 
     def next(self, event):
         self.ind += 1
-        i = self.ind % len(freqs)
-        ydata = np.sin(2 * np.pi * freqs[i] * t)
-        l.set_ydata(ydata)
+        i = self.ind % len(self.freqs)
+        ydata = np.sin(2 * np.pi * self.freqs[i] * self.pt)
+        self.pl.set_ydata(ydata)
         plt.draw()
 
     def prev(self, event):
         self.ind -= 1
-        i = self.ind % len(freqs)
-        ydata = np.sin(2 * np.pi * freqs[i] * t)
-        l.set_ydata(ydata)
+        i = self.ind % len(self.freqs)
+        ydata = np.sin(2 * np.pi * self.freqs[i] * self.pt)
+        self.pl.set_ydata(ydata)
         plt.draw()
 
+    def make_button(self, name="Next", pos=[0.7, 0.05, 0.1, 0.075]):
+        axs_pos = plt.axes(pos)
+        axs_bot = Button(axs_pos, name)
+        return axs_bot
 
-callback = Index()
-axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
-axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
-bnext = Button(axnext, 'Next')
-bnext.on_clicked(callback.next)
-bprev = Button(axprev, 'Previous')
-bprev.on_clicked(callback.prev)
 
-plt.show()
+if __name__ == "__main__":
+    obj = Index()
+
+    bnext = obj.make_button("Next", [0.7, 0.05, 0.1, 0.075])
+    bnext.on_clicked(obj.next)
+
+    bprev = obj.make_button("Previous", [0.81, 0.05, 0.1, 0.075])
+    bprev.on_clicked(obj.prev)
+    plt.show()

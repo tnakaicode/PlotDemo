@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+import sys
+import pickle
 from matplotlib import animation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
@@ -19,6 +21,17 @@ class plot2d (object):
         self.axs.set_aspect('equal')
         self.axs.xaxis.grid()
         self.axs.yaxis.grid()
+
+    def div_axs(self):
+        self.div = make_axes_locatable(self.axs)
+        self.axs.set_aspect('equal')
+
+        self.ax_x = self.div.append_axes(
+            "bottom", 1.0, pad=0.5, sharex=self.axs)
+        self.ax_x.grid()
+        self.ax_y = self.div.append_axes(
+            "right", 1.0, pad=0.5, sharey=self.axs)
+        self.ax_y.grid()
 
 
 class plot3d (object):
@@ -42,8 +55,9 @@ class plotocc (object):
     def __init__(self):
         self.display, self.start_display, self.add_menu, self.add_functionto_menu = init_display()
 
+
 class LineDrawer(object):
-    
+
     def __init__(self, dirname="./tmp/", txtname="plot_data"):
         self.trajectory = None
         self.xx = []
