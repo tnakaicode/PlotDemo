@@ -10,8 +10,11 @@ from mpl_toolkits.mplot3d import Axes3D
 from OCC.Display.SimpleGui import init_display
 from OCC.Core.gp import gp_Pnt, gp_Vec, gp_Dir
 from OCC.Core.gp import gp_Ax1, gp_Ax2, gp_Ax3
+from OCC.Core.gp import gp_Lin
 from OCCUtils.Construct import make_box, make_line
 from OCCUtils.Construct import make_plane, make_polygon
+from OCCUtils.Construct import point_to_vector, vector_to_point
+from OCCUtils.Construct import dir_to_vec, vec_to_dir
 
 
 class plot2d (object):
@@ -50,10 +53,41 @@ class plot3d (object):
         self.axs.zaxis.grid()
 
 
+def pnt_trf_vec(pnt=gp_Pnt(), vec=gp_Vec()):
+    v = point_to_vector(pnt)
+    v += vec
+    return vector_to_point(v)
+
+
 class plotocc (object):
 
     def __init__(self):
         self.display, self.start_display, self.add_menu, self.add_functionto_menu = init_display()
+
+    def show_box(self):
+        self.display.DisplayShape(gp_Pnt())
+        self.display.DisplayShape(make_box(100, 100, 100))
+
+    def show_axs_pln(self, axs=gp_Ax3(), scale=100):
+        pnt = axs.Location()
+        dx = axs.XDirection()
+        dy = axs.YDirection()
+        dz = axs.Direction()
+        vx = dir_to_vec(dx).Scaled(1 * scale)
+        vy = dir_to_vec(dy).Scaled(2 * scale)
+        vz = dir_to_vec(dz).Scaled(3 * scale)
+
+        pnt_x = pnt_trf_vec(pnt, vx)
+        pnt_y = pnt_trf_vec(pnt, vy)
+        pnt_z = pnt_trf_vec(pnt, vz)
+        self.display.DisplayShape(pnt)
+        self.display.DisplayShape(make_line(pnt, pnt_x), color="RED")
+        self.display.DisplayShape(make_line(pnt, pnt_y), color="GREEN")
+        self.display.DisplayShape(make_line(pnt, pnt_z), color="BLUE")
+
+    def show(self):
+        self.display.FitAll()
+        self.start_display()
 
 
 class LineDrawer(object):

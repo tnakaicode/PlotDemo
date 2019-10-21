@@ -8,10 +8,13 @@ from OCC.Display.SimpleGui import init_display
 from OCC.gp import gp_Pnt, gp_Vec, gp_Dir
 from OCC.gp import gp_Ax1, gp_Ax2, gp_Ax3
 
+from base import plotocc
+
 if __name__ == '__main__':
-    display, start_display, add_menu, add_functionto_menu = init_display()
+    obj = plotocc()
+    obj.show_box()
 
-    display.DisplayShape(gp_Pnt())
+    axs = gp_Ax3(gp_Pnt(-100, 0, 0), gp_Dir(0, 1, 1))
+    obj.show_axs_pln(axs, scale=25)
 
-    display.FitAll()
-    start_display()
+    obj.show()
