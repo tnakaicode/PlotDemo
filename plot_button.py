@@ -15,7 +15,7 @@ class Index(plot2d):
         self.freqs = np.arange(2, 20, 3)
         self.pt = np.arange(0.0, 1.0, 0.001)
         self.ps = np.sin(2 * np.pi * self.freqs[0] * self.pt)
-        self.pl, = self.axs.plot(self.pt, self.ps, lw=2)
+        self.pl, = self.axs.plot(self.pt, self.ps)
 
         # plt.subplots_adjust(bottom=0.2)
 
@@ -24,6 +24,7 @@ class Index(plot2d):
         i = self.ind % len(self.freqs)
         ydata = np.sin(2 * np.pi * self.freqs[i] * self.pt)
         self.pl.set_ydata(ydata)
+        #self.axs.plot(self.pt, ydata)
         plt.draw()
 
     def prev(self, event):

@@ -10,7 +10,7 @@ from linecache import getline, clearcache
 from scipy.integrate import simps
 from scipy.special import erf
 
-from PlotContour import plot_contour_sub, plot_contour_xyz
+from Plot2D import plot_contour_sub, plot_contour_xyz
 
 
 def gauss_1d(px, sx=0, wx=10):
