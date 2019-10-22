@@ -42,7 +42,7 @@ class plot3d (object):
     def __init__(self):
         self.fig = plt.figure()
         self.axs = self.fig.add_subplot(111, projection='3d')
-        #self.axs.set_aspect('equal')
+        # self.axs.set_aspect('equal')
 
         self.axs.set_xlabel('x')
         self.axs.set_ylabel('y')
@@ -84,6 +84,12 @@ class plotocc (object):
         self.display.DisplayShape(make_line(pnt, pnt_x), color="RED")
         self.display.DisplayShape(make_line(pnt, pnt_y), color="GREEN")
         self.display.DisplayShape(make_line(pnt, pnt_z), color="BLUE")
+
+    def show_plane(self, axs=gp_Ax3(), scale=100):
+        pnt = axs.Location()
+        vec = dir_to_vec(axs.Direction())
+        pln = make_plane(pnt, vec, -scale, scale, -scale, scale)
+        self.display.DisplayShape(pln)
 
     def show(self):
         self.display.FitAll()

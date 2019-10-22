@@ -5,13 +5,14 @@ from scipy.integrate import ode
 from mpl_toolkits.mplot3d import Axes3D
 
 from base import plot3d
+from GaussPlot import gauss_1d, gauss_1d_skew
 
 
 class Particle (object):
 
     def __init__(self, p0=[0, 0, 0], v0=[1, 1, 1]):
         self.init_dat = p0 + v0
-        self.q = 1.0
+        self.q = 10.0
         self.m = 1.0
         self.t0 = 0
 
@@ -25,11 +26,14 @@ class Particle (object):
         Y is the state vector (x, y, z, u, v, w) === (position, velocity).
         returns dY/dt.
         """
-        x, y, z = dat[0], dat[1], dat[2]
-        u, v, w = dat[3], dat[4], dat[5]
+        x, y, z = dat[:3]
+        u, v, w = dat[3:]
 
         alpha = self.q / self.m * self.b_field(dat[0:3])
-        return np.array([u, v, w, 0.5, alpha * w + self.e_filed(dat[0:3]), -alpha * v])
+        u1 = alpha * v
+        v1 = -alpha * u
+        w1 = w
+        return np.array([u, v, w, u1, v1, w1])
 
     def e_filed(self, xyz):
         x, y, z = xyz
@@ -37,7 +41,7 @@ class Particle (object):
 
     def b_field(self, xyz):
         x, y, z = xyz
-        return 2 * x + np.sin(2 * np.pi * y / 25) + np.sin(2 * np.pi * z / 25)
+        return 1
 
 
 class ChParticle (plot3d):
