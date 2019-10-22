@@ -67,8 +67,8 @@ class plotocc (object):
     def show_box(self):
         self.display.DisplayShape(gp_Pnt())
         self.display.DisplayShape(make_box(100, 100, 100))
-    
-    def show_pnt (self, xyz=[0,0,0]):
+
+    def show_pnt(self, xyz=[0, 0, 0]):
         self.display.DisplayShape(gp_Pnt(*xyz))
 
     def show_axs_pln(self, axs=gp_Ax3(), scale=100):
