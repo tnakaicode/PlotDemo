@@ -11,21 +11,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
-from base import plot3d
+from base import plot3d, plotocc
 
 if __name__ == "__main__":
-    imax = 20000                                             # points to draw
-    x = 0.5                                                 # initial x coord
-    y = 0.0                                                 # initial y coord
+    imax = 20000
+    x = 0.5
+    y = 0.0
     z = -0.2
     xn = 0.0
     yn = 0.0
-    graph1 = display(width=500, height=500, forward=(-3, 0, -1),
-                     title='3D Fractal Fern (rotate via right mouse button)', range=10)
-    graph1.show_rendertime = True
-    # Using points: cycle=27 ms, render=6 ms
-    # Using spheres: cycle=750 ms, render=30 ms
-    pts = points(color=color.green, size=0.01)
+
+    graph1 = plotocc()
     for i in range(1, imax):
         r = random.random()                                  # random number
         if (r <= 0.1):                                     # 10% probability
@@ -51,4 +47,6 @@ if __name__ == "__main__":
         xc = 4.0 * x                                       # linear TF for plot
         yc = 2.0 * y - 7
         zc = z
-        pts.append(pos=(xc, yc, zc))
+        graph1.show_pnt([xc, yc, zc])
+
+    graph1.show()
