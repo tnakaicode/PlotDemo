@@ -8,9 +8,9 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
 
 from OCC.Display.SimpleGui import init_display
-from OCC.Core.gp import gp_Pnt, gp_Vec, gp_Dir
-from OCC.Core.gp import gp_Ax1, gp_Ax2, gp_Ax3
-from OCC.Core.gp import gp_Lin
+from OCC.gp import gp_Pnt, gp_Vec, gp_Dir
+from OCC.gp import gp_Ax1, gp_Ax2, gp_Ax3
+from OCC.gp import gp_Lin
 from OCCUtils.Construct import make_box, make_line
 from OCCUtils.Construct import make_plane, make_polygon
 from OCCUtils.Construct import point_to_vector, vector_to_point
