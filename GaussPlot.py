@@ -25,7 +25,7 @@ def cdf_1d(px, sx=0, wx=10, kx=2):
 def gauss_1d_skew(px, sx=0, wx=10, kx=2):
     py = gauss_1d(px, sx, wx)
     py *= cdf_1d(px, sx, wx, kx)
-    return py / py.max()
+    return py
 
 
 def gauss_2d(mesh, sxy=[0, 0], wxy=[10, 10], deg=0.0):
@@ -35,7 +35,9 @@ def gauss_2d(mesh, sxy=[0, 0], wxy=[10, 10], deg=0.0):
     py = y * np.cos(rot) + x * np.sin(rot)
     fx = np.exp(-0.5 * (px / wxy[0])**2)
     fy = np.exp(-0.5 * (py / wxy[1])**2)
-    return fx * fy
+    func = fx * fy
+    func = func / func.max()
+    return func
 
 
 def gauss_2d_skew(mesh, sxy=[0, 0], wxy=[10, 10], kxy=[2, 2], deg=0.0):
@@ -45,7 +47,9 @@ def gauss_2d_skew(mesh, sxy=[0, 0], wxy=[10, 10], kxy=[2, 2], deg=0.0):
     py = y * np.cos(rot) + x * np.sin(rot)
     fx = gauss_1d_skew(px, 0, wxy[0], kxy[0])
     fy = gauss_1d_skew(py, 0, wxy[1], kxy[1])
-    return fx * fy
+    func = fx * fy
+    func = func / func.max()
+    return func
 
 
 if __name__ == "__main__":
