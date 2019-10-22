@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import ode
+from scipy.integrate import ode, complex_ode
 
 from OCC.Display.SimpleGui import init_display
 from OCC.Core.gp import gp_Pnt, gp_Vec, gp_Dir
@@ -25,8 +25,25 @@ class PlotParticle (Particle, plotocc):
         self.ini_dat = [0, 0, 0, 2, 1, 1]
 
     def set_solver(self):
-        self.solver = ode(self.my_method).set_integrator('dopri5')
+        self.solver = ode(self.my_method).set_integrator('dop853')
         self.solver.set_initial_value(self.init_dat, self.t0)
+
+        # vode
+        # Real-valued Variable-coefficient Ordinary Differential Equation
+        #
+        # zvode
+        # Complex-valued Variable-coefficient Ordinary Differential Equation
+        #
+        # lsoda
+        # Real-valued Variable-coefficient Ordinary Differential Equation
+        #
+        # dopri5
+        # Runge-Kutta method of order (4)5
+        # due to Dormand Prince (with stepsize control and dense output).
+        #
+        # dop853
+        # runge-kutta method of order 8(5,3)
+        # due to Dormand Prince (with stepsize control and dense output).
 
     def my_method(self, t, dat):
         """
@@ -39,18 +56,18 @@ class PlotParticle (Particle, plotocc):
 
         alpha = self.q / self.m * self.bz(dat[0:3])
         u1 = alpha * v
-        v1 = -alpha * u + self.ey(dat[0:3])
+        v1 = -alpha * u
         w1 = w
         return np.array([u, v, w, u1, v1, w1])
-    
-    def ey (self, xyz):
+
+    def ey(self, xyz):
         x, y, z = xyz
-        return 10
+        return 1
 
     def bz(self, xyz):
         x, y, z = xyz
         radi = np.sqrt(x**2 + y**2)
-        return gauss_1d_skew(z, sx=100, wx=10, kx=-2.0) / (0.1*radi)
+        return gauss_1d_skew(z, sx=10, wx=10, kx=-2.0) / (0.1 * radi)
 
     def run(self):
         self.t0 = 0.0
@@ -59,10 +76,28 @@ class PlotParticle (Particle, plotocc):
         self.pos = []
 
         while self.solver.successful() and self.solver.t < self.t1:
-            print(self.solver.t, *self.solver.y)
+            txt = "{:.3f} ".format(self.solver.t)
+            txt += "{:.3f} {:.3f} {:.3f} ".format(*self.solver.y[:3])
+            txt += "{:.3f} {:.3f} {:.3f} ".format(*self.solver.y[3:])
+            print(txt)
             self.solver.integrate(self.solver.t + self.dt)
             self.pos.append(self.solver.y[:3])
+        self.show_pos()
 
+    def run_until_z(self, pz=100):
+        self.dt = 0.05
+        self.pos = []
+
+        while self.solver.successful() and self.solver.y[2] <= pz:
+            txt = "{:.3f} ".format(self.solver.t)
+            txt += "{:.3f} {:.3f} {:.3f} ".format(*self.solver.y[:3])
+            txt += "{:.3f} {:.3f} {:.3f} ".format(*self.solver.y[3:])
+            print(txt)
+            self.solver.integrate(self.solver.t + self.dt)
+            self.pos.append(self.solver.y)
+        self.show_pos()
+
+    def show_pos(self):
         pts = []
         for i, val in enumerate(self.pos[:-1]):
             p0 = gp_Pnt(*val[0:3])
@@ -75,21 +110,24 @@ if __name__ == '__main__':
     obj = PlotParticle()
     obj.show_axs_pln(scale=10)
     obj.show_plane(scale=20.0)
-    obj.q = -10
+    obj.q = -1
+
+    axs = gp_Ax3(gp_Pnt(0, 0, 100), gp_Dir(0, 0, 1))
+    #obj.show_plane(axs, scale=20.0)
 
     obj.init_dat = [10, 5, 0, 5, 1, 2.0]
     obj.set_solver()
-    #obj.run()
+    obj.run_until_z()
 
     obj.init_dat = [10, 5, 0, 10, 1, 2.0]
     obj.set_solver()
-    #obj.run()
+    # obj.run()
 
-    obj.init_dat = [10, 5, 0, 50, 1, 2.0]
+    obj.init_dat = [10, 5, -50, 10, 10, 2.0]
     obj.set_solver()
-    obj.run()
-    
-    obj.init_dat = [20, 5, 0, 50, 10, 2.0]
+    obj.run_until_z()
+
+    obj.init_dat = [20, 5, -50, 10, 10, 2.0]
     obj.set_solver()
-    obj.run()
+    obj.run_until_z()
     obj.show()
