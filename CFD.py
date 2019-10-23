@@ -31,8 +31,8 @@ class NavierStokes (plot2d):
         self.nt = int(np.ceil(self.lt / self.dt))
 
         # 加速係数
-        alh = 1.74
-        eps = 1e-6
+        self.alp = 1.74
+        self.eps = 1e-6
 
         # Veclocity
         self.u = np.zeros_like(self.x)
@@ -101,7 +101,6 @@ class NavierStokes (plot2d):
 
         self.velocityBoundary()
 
-
     def computeDivergenceAuxiallyVelocity(self):
         """
         中間速度の発散を計算する関数．
@@ -115,70 +114,69 @@ class NavierStokes (plot2d):
         v_aux_211 = (v_aux_20_11 - v_aux_21_11) / (2 * dy)
         self.tetha[1:-1, 1:-1] = u_aux_112 + v_aux_211
 
+    def computePressurePoisson(self):
+        """
+        圧力Poisson方程式を解いて圧力を計算する関数．
+        """
 
-def computePressurePoisson(p, θ, α, Err_tol, dx, dy, ρ, dt):
-    """
-    圧力Poisson方程式を解いて圧力を計算する関数．
-    入出力：圧力（numpy.array）
-    入力：中間速度の発散（numpy.array）
-    入力：加速係数(float型)
-    入力：許容誤差(float型)
-    入力：離散点のx方向間隔(float型)
-    入力：離散点のy方向間隔(float型)
-    入力：密度(float型)
-    入力：計算時間間隔(float型)
-    戻り値：なし
-    """
+        dp = np.zeros_like(self.p)
+        err = 1.0
+        ite = 0
+        while err > self.eps:
+            # forを使った逐次計算
+            # for j in range(1,Ny-1):
+            #    for i in range(1,Nx-1):
+            #        dp[j,i] =( dy**2*(p[j+1,i]+p[j-1,i]) + dx**2*(p[j,i+1]+p[j,i-1]) - (tetha[j,i]*ρ/dt)*(dx**2*dy**2)\
+            #                  )/(2.*(dx**2+dy**2)) - p[j,i]
+            #        p[j,i] += α*dp[j,i]
 
-    dp = np.zeros_like(p)
-    ε = 1.0
-    ite = 0
-    while ε > Err_tol:
-        # forを使った逐次計算
-        # for j in range(1,Ny-1):
-        #    for i in range(1,Nx-1):
-        #        dp[j,i] =( dy**2*(p[j+1,i]+p[j-1,i])\
-        #                  +dx**2*(p[j,i+1]+p[j,i-1])\
-        #                  -(θ[j,i]*ρ/dt)*(dx**2*dy**2)\
-        #                  )/(2.*(dx**2+dy**2))\
-        #                  - p[j,i]
-        #        p[j,i] += α*dp[j,i]
+            # Black,odd-numbered row
+            dp[1:-1:2, 2:-1:2] = (dy**2 * (p[1:-1:2, 1:-2:2] + p[1:-1:2, 3::2])
+                                  + dx**2 * (p[:-2:2, 2:-1:2] +
+                                             p[2::2, 2:-1:2])
+                                  - dx**2 * dy**2 * rho /
+                                  dt * tetha[1:-1:2, 2:-1:2]
+                                  ) / (2.0 * (dx**2 + dy**2)) - p[1:-1:2, 2:-1:2]
+            p[1:-1:2, 2:-1:2] += alp * dp[1:-1:2, 2:-1:2]
+            
+            # Black,even-numbered row
+            dp[2:-1:2, 1:-1:2] = (dy**2 * (p[2:-1:2, :-2:2] + p[2:-1:2, 2::2])
+                                  + dx**2 * (p[1:-2:2, 1:-1:2] +
+                                             p[3::2, 1:-1:2])
+                                  - dx**2 * dy**2 * rho /
+                                  dt * tetha[2:-1:2, 1:-1:2]
+                                  ) / (2.0 * (dx**2 + dy**2)) - p[2:-1:2, 1:-1:2]
+            p[2:-1:2, 1:-1:2] += alp * dp[2:-1:2, 1:-1:2]
+            
+            # Red,odd-numbered row
+            dp[1:-1:2, 1:-1:2] = (dy**2 * (p[1:-1:2, :-2:2] + p[1:-1:2, 2::2])
+                                  + dx**2 * (p[:-2:2, 1:-1:2] +
+                                             p[2::2, 1:-1:2])
+                                  - dx**2 * dy**2 * rho /
+                                  dt * tetha[1:-1:2, 1:-1:2]
+                                  ) / (2.0 * (dx**2 + dy**2)) - p[1:-1:2, 1:-1:2]
+            p[1:-1:2, 1:-1:2] += alp * dp[1:-1:2, 1:-1:2]
+            
+            # Red,even-numbered row
+            dp[2:-1:2, 2:-1:2] = (dy**2 * (p[2:-1:2, 1:-2:2] + p[2:-1:2, 3::2])
+                                  + dx**2 * (p[1:-2:2, 2:-1:2] +
+                                             p[3::2, 2:-1:2])
+                                  - dx**2 * dy**2 * rho /
+                                  dt * tetha[2:-1:2, 2:-1:2]
+                                  ) / (2.0 * (dx**2 + dy**2)) - p[2:-1:2, 2:-1:2]
+            p[2:-1:2, 2:-1:2] += alp * dp[2:-1:2, 2:-1:2]
 
-        # Black,odd-numbered row
-        dp[1:-1:2, 2:-1:2] = (dy**2 * (p[1:-1:2, 1:-2:2] + p[1:-1:2, 3::2])
-                              + dx**2 * (p[:-2:2, 2:-1:2] + p[2::2, 2:-1:2])
-                              - dx**2 * dy**2 * ρ / dt * θ[1:-1:2, 2:-1:2]
-                              ) / (2.0 * (dx**2 + dy**2)) - p[1:-1:2, 2:-1:2]
-        p[1:-1:2, 2:-1:2] += α * dp[1:-1:2, 2:-1:2]
-        # Black,even-numbered row
-        dp[2:-1:2, 1:-1:2] = (dy**2 * (p[2:-1:2, :-2:2] + p[2:-1:2, 2::2])
-                              + dx**2 * (p[1:-2:2, 1:-1:2] + p[3::2, 1:-1:2])
-                              - dx**2 * dy**2 * ρ / dt * θ[2:-1:2, 1:-1:2]
-                              ) / (2.0 * (dx**2 + dy**2)) - p[2:-1:2, 1:-1:2]
-        p[2:-1:2, 1:-1:2] += α * dp[2:-1:2, 1:-1:2]
-        # Red,odd-numbered row
-        dp[1:-1:2, 1:-1:2] = (dy**2 * (p[1:-1:2, :-2:2] + p[1:-1:2, 2::2])
-                              + dx**2 * (p[:-2:2, 1:-1:2] + p[2::2, 1:-1:2])
-                              - dx**2 * dy**2 * ρ / dt * θ[1:-1:2, 1:-1:2]
-                              ) / (2.0 * (dx**2 + dy**2)) - p[1:-1:2, 1:-1:2]
-        p[1:-1:2, 1:-1:2] += α * dp[1:-1:2, 1:-1:2]
-        # Red,even-numbered row
-        dp[2:-1:2, 2:-1:2] = (dy**2 * (p[2:-1:2, 1:-2:2] + p[2:-1:2, 3::2])
-                              + dx**2 * (p[1:-2:2, 2:-1:2] + p[3::2, 2:-1:2])
-                              - dx**2 * dy**2 * ρ / dt * θ[2:-1:2, 2:-1:2]
-                              ) / (2.0 * (dx**2 + dy**2)) - p[2:-1:2, 2:-1:2]
-        p[2:-1:2, 2:-1:2] += α * dp[2:-1:2, 2:-1:2]
+            # ノイマン境界条件
+            p[0, :] = p[1, :]
+            p[:, 0] = p[:, 1]
+            p[:, -1] = p[:, -2]
+            p[-1, :] = p[-2, :]
 
-        p[0, :] = p[1, :]   # ノイマン境界条件
-        p[:, 0] = p[:, 1]   # ノイマン境界条件
-        p[:, -1] = p[:, -2]  # ノイマン境界条件
-        p[-1, :] = p[-2, :]  # ノイマン境界条件
-
-        ε_d = np.sum(np.abs(p[:]))
-        if ε_d < 1e-20:
-            ε_d = 1.0  # 全てのpが0だと分母が0になるので，合計小さいときは1にする
-        ε = np.sum(np.abs(dp[:])) / ε_d
-    # print(ε)
+            err_d = np.sum(np.abs(p[:]))
+            if err_d < 1e-20:
+                err_d = 1.0  # 全てのpが0だと分母が0になるので，合計小さいときは1にする
+            err = np.sum(np.abs(dp[:])) / err_d
+        # print(ε)
 
 
 def computeVelocity(u, v, u_aux, v_aux, p, dx, dy, ρ, dt, Uwall):
