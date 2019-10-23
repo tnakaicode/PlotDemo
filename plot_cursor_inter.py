@@ -35,7 +35,7 @@ class GetCursor(LineDrawer):
 
     def run(self):
         self.run_base()
-        self.axs.contourf(*self.mesh, self.mesh[0])
+        self.axs.contourf(*self.mesh, self.mesh[0], cmap="jet")
 
         #fig.canvas.mpl_connect('motion_notify_event', self.onclick)
         self.fig.canvas.mpl_connect('button_press_event', self.onclick)

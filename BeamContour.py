@@ -149,16 +149,12 @@ Z = functz(u)
 Z1 = functz1(w)
 
 obj = plot2d()
+img = obj.axs.contourf(u, origin='lower', cmap="jet")
+obj.axs.set_title('Stream function - 2D Flow over a beam')
+obj.fig.colorbar(img)
 
-fig1 = plt.figure()
-plt.title('Stream function - 2D Flow over a beam')
-plt.imshow(u, origin='lower')
-plt.colorbar()
-
-fig2 = plt.figure()
-plt.title('Vorticity - 2D Flow over a beam')
-plt.imshow(w, origin='lower')
-plt.colorbar()
-plt.show()                             # Shows the figure, close Python shell to
-# Finish watching the figure
-print("finished")
+obj = plot2d()
+img = obj.axs.contourf(w, origin='lower', cmap="jet")
+obj.axs.set_title('Vorticity - 2D Flow over a beam')
+obj.fig.colorbar(img)
+plt.show()
