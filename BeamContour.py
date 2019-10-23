@@ -8,6 +8,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import image
 
@@ -51,6 +52,7 @@ def borders():
     for i in range(0, Nxmax + 1):
         u[i, Nymax] = u[i, Nymax - 1] + V0 * h
         w[i, Nymax - 1] = 0.
+
     # Inlet
     for j in range(0, Nymax + 1):
         u[1, j] = u[0, j]
@@ -117,36 +119,15 @@ m = 0
 i = 0
 borders()
 while (i <= 300):
+    sys.stdout.write("\r{:d} / {:d}".format(i, 300))
+    sys.stdout.flush()
     i += 1
-    if i % 10 == 0:
-        print(m)
-        m += 1
     relax()
-for i in range(0, Nxmax + 1):
+    
 
+for i in range(0, Nxmax + 1):
     for j in range(0, Nymax + 1):
         u[i, j] = u[i, j] / (V0 * h)  # stream in V0h units
-# u.resize((70,70));
-# w.resize((70,70));
-x = list(range(0, Nxmax - 1))  # to plot lines in x axis
-y = list(range(0, Nymax - 1))
-# x=range(0,69)                   #to plot lines in x axis
-# y=range(0,69)
-X, Y = np.meshgrid(x, y)  # grid for position and time
-
-
-def functz(u):  # returns stream flow to plot
-    z = u[X, Y]  # for several iterations
-    return z
-
-
-def functz1(w):  # returns stream flow to plot
-    z1 = w[X, Y]  # for several iterations
-    return z1
-
-
-Z = functz(u)
-Z1 = functz1(w)
 
 obj = plot2d()
 img = obj.axs.contourf(u, origin='lower', cmap="jet")
