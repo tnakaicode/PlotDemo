@@ -55,7 +55,7 @@ class plot3d (object):
 
 def pnt_trf_vec(pnt=gp_Pnt(), vec=gp_Vec()):
     v = point_to_vector(pnt)
-    v += vec
+    v.Add(vec)
     return vector_to_point(v)
 
 
