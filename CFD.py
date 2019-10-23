@@ -1,6 +1,8 @@
 import numpy as np
+import sys
 from matplotlib import pyplot as plt
 from IPython import display
+
 
 from base import plot2d
 
@@ -8,6 +10,8 @@ from base import plot2d
 class NavierStokes (plot2d):
 
     def __init__(self):
+        plot2d.__init__(self)
+
         # 流体の密度[kg/m^3]
         self.rho = 1e3
         # 流体の動粘度[m^2/s]
@@ -20,9 +24,9 @@ class NavierStokes (plot2d):
         self.ly = 0.01
         self.nx = 21
         self.ny = 21
-        x1d = np.linspace(0, self.lx, self.nx)
-        y1d = np.linspace(0, self.ly, self.ny)
-        self.x, self.y = np.meshgrid(x1d, y1d)
+        self.x1d = np.linspace(0, self.lx, self.nx)
+        self.y1d = np.linspace(0, self.ly, self.ny)
+        self.x, self.y = np.meshgrid(self.x1d, self.y1d)
         self.dx = self.lx / (self.nx - 1)
         self.dy = self.ly / (self.ny - 1)
 
@@ -70,34 +74,34 @@ class NavierStokes (plot2d):
         """
         中間速度を計算する関数．
         """
-        u_11 = u[1:-1, 1:-1]
-        v_11 = v[1:-1, 1:-1]
+        u_11 = self.u[1:-1, 1:-1]
+        v_11 = self.v[1:-1, 1:-1]
 
-        u_11_20 = u[1:-1, 2:]
-        u_11_21 = u[1:-1, :-2]
-        v_11_20 = v[1:-1, 2:]
-        v_11_21 = v[1:-1, :-2]
+        u_11_20 = self.u[1:-1, 2:]
+        u_11_21 = self.u[1:-1, :-2]
+        v_11_20 = self.v[1:-1, 2:]
+        v_11_21 = self.v[1:-1, :-2]
 
-        u_20_11 = u[2:, 1:-1]
-        u_21_11 = u[:-2, 1:-1]
-        v_20_11 = v[2:, 1:-1]
-        v_21_11 = v[:-2, 1:-1]
+        u_20_11 = self.u[2:, 1:-1]
+        u_21_11 = self.u[:-2, 1:-1]
+        v_20_11 = self.v[2:, 1:-1]
+        v_21_11 = self.v[:-2, 1:-1]
 
-        u_1120 = u_11 * (u_11_20 - u_11_21) / (2 * dx)
-        u_1121 = v_11 * (u_20_11 - u_21_11) / (2 * dy)
-        u_2011 = (u_11_20 - 2.0 * u_11 + u_11_21) / dx**2
-        u_2111 = (u_20_11 - 2.0 * u_11 + u_21_11) / dy**2
+        u_1120 = u_11 * (u_11_20 - u_11_21) / (2 * self.dx)
+        u_1121 = v_11 * (u_20_11 - u_21_11) / (2 * self.dy)
+        u_2011 = (u_11_20 - 2.0 * u_11 + u_11_21) / self.dx**2
+        u_2111 = (u_20_11 - 2.0 * u_11 + u_21_11) / self.dy**2
 
         v_1120 = u_11 * (v_11_20 - v_11_21)
         v_1121 = v_11 * (v_20_11 - v_21_11)
         v_2011 = v_11_20 - 2.0 * v_11 + v_11_21
         v_2111 = v_20_11 - 2.0 * v_11 + v_21_11
 
-        u_aux[1:-1, 1:-1] += -dt * (u_1120 + u_1121)
-        u_aux[1:-1, 1:-1] += +dt * ν * (u_2011 + u_2111)
+        self.u_aux[1:-1, 1:-1] += -self.dt * (u_1120 + u_1121)
+        self.u_aux[1:-1, 1:-1] += +self.dt * self.ν * (u_2011 + u_2111)
 
-        v_aux[1:-1, 1:-1] += -dt * (v_1120 + v_1121)
-        v_aux[1:-1, 1:-1] += +dt * ν * (v_2011 + v_2111)
+        self.v_aux[1:-1, 1:-1] += -self.dt * (v_1120 + v_1121)
+        self.v_aux[1:-1, 1:-1] += +self.dt * self.ν * (v_2011 + v_2111)
 
         self.velocityBoundary()
 
@@ -105,13 +109,13 @@ class NavierStokes (plot2d):
         """
         中間速度の発散を計算する関数．
         """
-        u_aux_11_20 = u_aux[1:-1, 2:]
-        u_aux_11_21 = u_aux[1:-1, :-2]
-        u_aux_112 = (u_aux_11_20 - u_aux_11_21) / (2 * dx)
+        u_aux_11_20 = self.u_aux[1:-1, 2:]
+        u_aux_11_21 = self.u_aux[1:-1, :-2]
+        u_aux_112 = (u_aux_11_20 - u_aux_11_21) / (2 * self.dx)
 
-        v_aux_20_11 = v_aux[1:-1, 2:]
-        v_aux_21_11 = v_aux[1:-1, :-2]
-        v_aux_211 = (v_aux_20_11 - v_aux_21_11) / (2 * dy)
+        v_aux_20_11 = self.v_aux[1:-1, 2:]
+        v_aux_21_11 = self.v_aux[1:-1, :-2]
+        v_aux_211 = (v_aux_20_11 - v_aux_21_11) / (2 * self.dy)
         self.tetha[1:-1, 1:-1] = u_aux_112 + v_aux_211
 
     def computePressurePoisson(self):
@@ -131,123 +135,88 @@ class NavierStokes (plot2d):
             #        p[j,i] += α*dp[j,i]
 
             # Black,odd-numbered row
-            dp[1:-1:2, 2:-1:2] = (dy**2 * (p[1:-1:2, 1:-2:2] + p[1:-1:2, 3::2])
-                                  + dx**2 * (p[:-2:2, 2:-1:2] +
-                                             p[2::2, 2:-1:2])
-                                  - dx**2 * dy**2 * rho /
-                                  dt * tetha[1:-1:2, 2:-1:2]
-                                  ) / (2.0 * (dx**2 + dy**2)) - p[1:-1:2, 2:-1:2]
-            p[1:-1:2, 2:-1:2] += alp * dp[1:-1:2, 2:-1:2]
-            
+            dp[1:-1:2, 2:-1:2] = (self.dy**2 * (self.p[1:-1:2, 1:-2:2] + self.p[1:-1:2, 3::2])
+                                  + self.dx**2 *
+                                  (self.p[:-2:2, 2:-1:2] +
+                                   self.p[2::2, 2:-1:2])
+                                  - self.dx**2 * self.dy**2 * self.rho /
+                                  self.dt * self.tetha[1:-1:2, 2:-1:2]
+                                  ) / (2.0 * (self.dx**2 + self.dy**2)) - self.p[1:-1:2, 2:-1:2]
+            self.p[1:-1:2, 2:-1:2] += self.alp * dp[1:-1:2, 2:-1:2]
+
             # Black,even-numbered row
-            dp[2:-1:2, 1:-1:2] = (dy**2 * (p[2:-1:2, :-2:2] + p[2:-1:2, 2::2])
-                                  + dx**2 * (p[1:-2:2, 1:-1:2] +
-                                             p[3::2, 1:-1:2])
-                                  - dx**2 * dy**2 * rho /
-                                  dt * tetha[2:-1:2, 1:-1:2]
-                                  ) / (2.0 * (dx**2 + dy**2)) - p[2:-1:2, 1:-1:2]
-            p[2:-1:2, 1:-1:2] += alp * dp[2:-1:2, 1:-1:2]
-            
+            dp[2:-1:2, 1:-1:2] = (self.dy**2 * (self.p[2:-1:2, :-2:2] + self.p[2:-1:2, 2::2])
+                                  + self.dx**2 *
+                                  (self.p[1:-2:2, 1:-1:2] +
+                                   self.p[3::2, 1:-1:2])
+                                  - self.dx**2 * self.dy**2 * self.rho /
+                                  self.dt * self.tetha[2:-1:2, 1:-1:2]
+                                  ) / (2.0 * (self.dx**2 + self.dy**2)) - self.p[2:-1:2, 1:-1:2]
+            self.p[2:-1:2, 1:-1:2] += self.alp * dp[2:-1:2, 1:-1:2]
+
             # Red,odd-numbered row
-            dp[1:-1:2, 1:-1:2] = (dy**2 * (p[1:-1:2, :-2:2] + p[1:-1:2, 2::2])
-                                  + dx**2 * (p[:-2:2, 1:-1:2] +
-                                             p[2::2, 1:-1:2])
-                                  - dx**2 * dy**2 * rho /
-                                  dt * tetha[1:-1:2, 1:-1:2]
-                                  ) / (2.0 * (dx**2 + dy**2)) - p[1:-1:2, 1:-1:2]
-            p[1:-1:2, 1:-1:2] += alp * dp[1:-1:2, 1:-1:2]
-            
+            dp[1:-1:2, 1:-1:2] = (self.dy**2 * (self.p[1:-1:2, :-2:2] + self.p[1:-1:2, 2::2])
+                                  + self.dx**2 *
+                                  (self.p[:-2:2, 1:-1:2] +
+                                   self.p[2::2, 1:-1:2])
+                                  - self.dx**2 * self.dy**2 * self.rho /
+                                  self.dt * self.tetha[1:-1:2, 1:-1:2]
+                                  ) / (2.0 * (self.dx**2 + self.dy**2)) - self.p[1:-1:2, 1:-1:2]
+            self.p[1:-1:2, 1:-1:2] += self.alp * dp[1:-1:2, 1:-1:2]
+
             # Red,even-numbered row
-            dp[2:-1:2, 2:-1:2] = (dy**2 * (p[2:-1:2, 1:-2:2] + p[2:-1:2, 3::2])
-                                  + dx**2 * (p[1:-2:2, 2:-1:2] +
-                                             p[3::2, 2:-1:2])
-                                  - dx**2 * dy**2 * rho /
-                                  dt * tetha[2:-1:2, 2:-1:2]
-                                  ) / (2.0 * (dx**2 + dy**2)) - p[2:-1:2, 2:-1:2]
-            p[2:-1:2, 2:-1:2] += alp * dp[2:-1:2, 2:-1:2]
+            dp[2:-1:2, 2:-1:2] = (self.dy**2 * (self.p[2:-1:2, 1:-2:2] + self.p[2:-1:2, 3::2])
+                                  + self.dx**2 *
+                                  (self.p[1:-2:2, 2:-1:2] +
+                                   self.p[3::2, 2:-1:2])
+                                  - self.dx**2 * self.dy**2 * self.rho /
+                                  self.dt * self.tetha[2:-1:2, 2:-1:2]
+                                  ) / (2.0 * (self.dx**2 + self.dy**2)) - self.p[2:-1:2, 2:-1:2]
+            self.p[2:-1:2, 2:-1:2] += self.alp * dp[2:-1:2, 2:-1:2]
 
             # ノイマン境界条件
-            p[0, :] = p[1, :]
-            p[:, 0] = p[:, 1]
-            p[:, -1] = p[:, -2]
-            p[-1, :] = p[-2, :]
+            self.p[0, :] = self.p[1, :]
+            self.p[:, 0] = self.p[:, 1]
+            self.p[:, -1] = self.p[:, -2]
+            self.p[-1, :] = self.p[-2, :]
 
-            err_d = np.sum(np.abs(p[:]))
+            err_d = np.sum(np.abs(self.p))
             if err_d < 1e-20:
                 err_d = 1.0  # 全てのpが0だと分母が0になるので，合計小さいときは1にする
+
             err = np.sum(np.abs(dp[:])) / err_d
+            sys.stdout.write("\r {:.3f} / {:.3f}".format(err, self.eps))
+            sys.stdout.flush()
         # print(ε)
 
+    def computeVelocity(self):
+        """
+        時刻n+1の速度を計算する関数．
+        """
 
-def computeVelocity(u, v, u_aux, v_aux, p, dx, dy, ρ, dt, Uwall):
-    """
-    時刻n+1の速度を計算する関数．
-    入出力：x方向速度（numpy.array）
-    入出力：y方向速度（numpy.array）
-    入力：x方向中間速度（numpy.array）
-    入力：y方向中間速度（numpy.array）
-    入力：圧力（numpy.array）
-    入力：離散点のx方向間隔(float型)
-    入力：離散点のy方向間隔(float型)
-    入力：計算時間間隔(float型)
-    入力：動粘度(float型)
-    入力：フタの移動速度(float型)
-    戻り値：なし
-    """
-
-    u[1:-1, 1:-1] = u_aux[1:-1, 1:-1] - dt / ρ * \
-        (p[1:-1, 2:] - p[1:-1, :-2]) / (dx * 2.0)
-    v[1:-1, 1:-1] = v_aux[1:-1, 1:-1] - dt / ρ * \
-        (p[2:, 1:-1] - p[:-2, 1:-1]) / (dy * 2.0)
-    velocityBoundary(u, v, Uwall)
+        self.u[1:-1, 1:-1] = self.u_aux[1:-1, 1:-1] - self.dt / self.rho * \
+            (self.p[1:-1, 2:] - self.p[1:-1, :-2]) / (self.dx * 2.0)
+        self.v[1:-1, 1:-1] = self.v_aux[1:-1, 1:-1] - self.dt / self.rho * \
+            (self.p[2:, 1:-1] - self.p[:-2, 1:-1]) / (self.dy * 2.0)
+        self.velocityBoundary()
 
 
 def main():
 
-    ρ = 1e3       # 流体の密度[kg/m^3]
-    ν = 1e-6      # 流体の動粘度[m^2/s]
-    Uwall = 0.01  # フタの移動速度[m/s]
-
-    Lx = 0.01         # x方向計算領域[m]
-    Ly = Lx           # x方向計算領域[m]
-    Nx = 21           # x方向の離散点の個数
-    Ny = Nx           # y方向の離散点の個数
-    dx = Lx / (Nx - 1)  # 離散点のx方向間隔
-    dy = Ly / (Ny - 1)  # 離散点のy方向間隔
-
-    Lt = 3. * Lx / Uwall          # 計算終了時間[s]
-    dt = 0.1 * dx / Uwall         # 計算時間間隔
-    Nt = int(np.ceil(Lt / dt))  # 計算回数
-
-    α = 1.74        # 加速係数
-    Err_tol = 1e-6  # 許容誤差
-
-    x1d = np.linspace(0, Lx, Nx)  # x座標
-    y1d = np.linspace(0, Ly, Ny)  # y座標
-    x, y = np.meshgrid(x1d, y1d)  # 2次元グリッド
-
-    u = np.zeros((Ny, Nx))    # 速度のx方向成分
-    v = np.empty_like(u)      # 速度のy方向成分
-    p = np.empty_like(u)      # 圧力
-    u_aux = np.empty_like(u)  # 中間速度のx方向成分
-    v_aux = np.empty_like(v)  # 中間速度のy方向成分
-    θ = np.zeros_like(p)      # 中間速度の発散
-
-    # 初期化（0ステップめ）
-    initialize(u, v, p, Uwall)
+    obj = NavierStokes()
 
     # グラフ描画設定
     xlabel = "$x$"
     ylabel = "$y$"
     zlabel = "$(p-p_\min)/(p_\max-p_\min)$"
-    tlabelx = Lx / 50
-    tlabely = Ly / 50
-    zmin = p.min()
-    zmax = p.max()
+    tlabelx = obj.lx / 50
+    tlabely = obj.ly / 50
+    zmin = obj.p.min()
+    zmax = obj.p.max()
     origin = "lower"
     interp = "bicubic"
     cbar_ticks = np.linspace(zmin, zmax, 11)
-    extent = (x1d.min(), x1d.max(), y1d.min(), y1d.max())
+    extent = (obj.x1d.min(), obj.x1d.max(), obj.y1d.min(), obj.y1d.max())
     timestamp = "%0.4f s"  # timestamp%実数 として使用
     fontsize = 15
 
@@ -255,11 +224,11 @@ def main():
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_xlabel(xlabel, fontsize=fontsize)
     ax.set_ylabel(ylabel, fontsize=fontsize)
-    velo = ax.quiver(
-        x[::], y[::], u[::], v[::], units="xy", pivot="middle", color="black", scale=25
-    )
+    # velo = ax.quiver(
+    #    obj.x[::], obj.y[::], obj.u[::], obj.v[::], units="xy", pivot="middle", color="black", scale=25
+    # )
     img = ax.imshow(
-        p,
+        obj.p,
         extent=extent,
         origin=origin,
         interpolation=interp,
@@ -269,28 +238,25 @@ def main():
     )
     cbar = fig.colorbar(img, ticks=cbar_ticks, label=zlabel)
     text = ax.text(tlabelx, tlabely, timestamp %
-                   (0.0 * dt), fontsize=15, color="black")
+                   (0.0 * obj.dt), fontsize=15, color="black")
     fig.canvas.draw()
     display.display(fig)
     display.clear_output(wait=True)
     # plt.pause(0.001)
 
-    for n in range(0, Nt):
+    for n in range(0, 3):
         # print(n)
-        computeAuxiallyVelocity(u_aux, v_aux, u, v, dx,
-                                dy, dt, ν, Uwall)  # 中間速度を計算
-        computeDivergenceAuxiallyVelocity(
-            θ, u_aux, v_aux, dx, dy)         # 中間速度の発散を計算
-        computePressurePoisson(p, θ, α, Err_tol, dx, dy,
-                               ρ, dt)            # 圧力を計算
-        computeVelocity(u, v, u_aux, v_aux, p, dx, dy, ρ,
-                        dt, Uwall)       # 中間速度を修正して速度を計算
+        obj.computeAuxiallyVelocity()  # 中間速度を計算
+        obj.computeDivergenceAuxiallyVelocity()         # 中間速度の発散を計算
+        obj.computePressurePoisson()            # 圧力を計算
+        obj.computeVelocity()       # 中間速度を修正して速度を計算
 
         # if (n+1)%10==0:
-        text.set_text(timestamp % ((n + 1) * dt))
+        text.set_text(timestamp % ((n + 1) * obj.dt))
 
-        velo.set_UVC(u[::], v[::])
-        img.set_data((p[::] - p.min()) / (p.max() - p.min()))  # 圧力を0~1に規格化する
+        #velo.set_UVC(obj.u[::], obj.v[::])
+        img.set_data((obj.p[::] - obj.p.min()) /
+                     (obj.p.max() - obj.p.min()))  # 圧力を0~1に規格化する
 
         zmin = 0.0  # p.min()
         zmax = 1.0  # p.max()
@@ -306,4 +272,16 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    obj = NavierStokes()
+    img = obj.axs.imshow(obj.p)
+    obj.fig.colorbar(img, shrink=0.9)
+    obj.fig.savefig("./tmp/CFD.png")
+
+    for n in range(0, 4):
+        # print(n)
+        obj.computeAuxiallyVelocity()  # 中間速度を計算
+        obj.computeDivergenceAuxiallyVelocity()         # 中間速度の発散を計算
+        obj.computePressurePoisson()            # 圧力を計算
+        obj.computeVelocity()       # 中間速度を修正して速度を計算
+        img.set_data(obj.p)
+        obj.fig.savefig("./tmp/CFD_{:d}.png".format(n))
