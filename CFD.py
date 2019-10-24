@@ -185,7 +185,7 @@ class NavierStokes (plot2d):
                 err_d = 1.0  # 全てのpが0だと分母が0になるので，合計小さいときは1にする
 
             err = np.sum(np.abs(dp[:])) / err_d
-            sys.stdout.write("\r {:.3f} / {:.3f}".format(err, self.eps))
+            sys.stdout.write("\r {:.8f} / {:.8f}".format(err, self.eps))
             sys.stdout.flush()
         # print(ε)
 

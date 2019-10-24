@@ -10,11 +10,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import sys
 
 from base import plot3d, plotocc
 
 if __name__ == "__main__":
-    imax = 20000
+    imax = 10000
     x = 0.5
     y = 0.0
     z = -0.2
@@ -23,6 +24,8 @@ if __name__ == "__main__":
 
     graph1 = plotocc()
     for i in range(1, imax):
+        sys.stdout.write("\r {:d} / {:d}".format(i, imax))
+        sys.stdout.flush()
         r = random.random()
         # random number
         if (r <= 0.1):
@@ -49,11 +52,12 @@ if __name__ == "__main__":
         x = xn
         y = yn
         z = zn
-        
+
         # linear TF for plot
-        xc = 4.0 * x                                       
+        xc = 4.0 * x
         yc = 2.0 * y - 7
         zc = z
         graph1.show_pnt([xc, yc, zc])
 
+    print("\n")
     graph1.show()
