@@ -7,8 +7,10 @@ import time
 from mpl_toolkits.mplot3d import Axes3D
 from sys import exit
 
+from OCC.gp import gp_Pnt, gp_Vec, gp_Dir
+from OCC.gp import gp_Ax1, gp_Ax2, gp_Ax3
 
-from base import plot2d, plot3d
+from base import plot2d, plot3d, plotocc
 
 
 class BrownMotion (object):
@@ -18,19 +20,45 @@ class BrownMotion (object):
         self.nx = 100
         self.px = np.zeros([self.dm, self.nx])
         self.pt = np.linspace(0, 1, self.nx)
-        print(self.rand_point())
-        print(self.rand_point())
+        self.rxyz = [10., 15., 20.]
+        self.r_min = np.min(self.rxyz)
+        self.r_max = np.max(self.rxyz)
 
     def rand_point(self):
         dx = np.random.randn(self.dm)
         dx_n = np.sqrt(np.sum(dx ** 2))
-        return dx / dx_n
+        x, y, z = dx / dx_n
+        p, q, r = self.rxyz
+        return x * p, y * q, z * r
 
-    def plot_pplt3d(self):
+    def plot_plt3d(self):
         obj = plot3d()
-        obj.plot_ball()
-        obj.plot_ball(rxyz=[1, 2, 1])
+        obj.plot_ball(rxyz=self.rxyz)
+        obj.axs.scatter(*self.rand_point())
+        obj.axs.scatter(*self.rand_point())
+        #obj.plot_ball(rxyz=[1, 2, 1])
+        print(*np.random.randn(self.dm))
+        print(*np.random.randn(self.dm))
+        print(*np.random.randn(self.dm))
+        print(*np.random.randn(self.dm))
         plt.show()
+
+    def plot_occ(self):
+        obj = plotocc()
+        obj.show_pnt([self.rxyz[0], 0, 0])
+        obj.show_pnt([0, self.rxyz[1], 0])
+        obj.show_pnt([0, 0, self.rxyz[2]])
+        print(*self.rand_point())
+        obj.show_pnt(self.rand_point())
+        obj.show_pnt(self.rand_point())
+        obj.show_pnt(self.rand_point())
+        obj.show_pnt(self.rand_point())
+        obj.show_ellipsoid(rxyz=self.rxyz)
+        obj.show_ball(scale=self.rxyz[0], trans=0.9)
+        obj.show_ball(scale=self.rxyz[1], trans=0.8)
+        obj.show_ball(scale=self.rxyz[2], trans=0.7)
+        obj.show_axs_pln(scale=self.r_min)
+        obj.show()
 
 
 def brownian_displacement_display(k, n, m, d, t, dsq):
@@ -416,7 +444,7 @@ def timestamp():
 
 if __name__ == '__main__':
     obj = BrownMotion()
-    obj.plot_pplt3d()
+    obj.plot_occ()
     timestamp()
 
     print('')
