@@ -8,6 +8,31 @@ from mpl_toolkits.mplot3d import Axes3D
 from sys import exit
 
 
+from base import plot2d, plot3d
+
+
+class BrownMotion (object):
+
+    def __init__(self):
+        self.dm = 3
+        self.nx = 100
+        self.px = np.zeros([self.dm, self.nx])
+        self.pt = np.linspace(0, 1, self.nx)
+        print(self.rand_point())
+        print(self.rand_point())
+
+    def rand_point(self):
+        dx = np.random.randn(self.dm)
+        dx_n = np.sqrt(np.sum(dx ** 2))
+        return dx / dx_n
+
+    def plot_pplt3d(self):
+        obj = plot3d()
+        obj.plot_ball()
+        obj.plot_ball(rxyz=[1, 2, 1])
+        plt.show()
+
+
 def brownian_displacement_display(k, n, m, d, t, dsq):
 
     # *****************************************************************************80
@@ -163,7 +188,7 @@ def brownian_motion_display(m, n, x):
         y = np.linspace(0, n - 1, n) / float(n - 1)
         plt.plot(x[0, :], y[:], 'b', linewidth=2)
         plt.plot(x[0, 0], y[0], 'g.', markersize=35)
-        plt.plot(x[0, n-1], y[n-1], 'r.', markersize=35)
+        plt.plot(x[0, n - 1], y[n - 1], 'r.', markersize=35)
         plt.grid(True)
         plt.xlabel('<--X-->')
         plt.ylabel('<--Time-->')
@@ -176,7 +201,7 @@ def brownian_motion_display(m, n, x):
     elif (m == 2):
         plt.plot(x[0, :], x[1, :], 'b', LineWidth=2)
         plt.plot(x[0, 0], x[1, 0], 'g.', markersize=35)
-        plt.plot(x[0, n-1], x[1, n-1], 'r.', markersize=35)
+        plt.plot(x[0, n - 1], x[1, n - 1], 'r.', markersize=35)
         plt.grid(True)
         plt.xlabel('<--X-->')
         plt.ylabel('<--Y-->')
@@ -192,7 +217,8 @@ def brownian_motion_display(m, n, x):
         ax = fig.add_subplot(111, projection='3d')
         ax.plot(x[0, :], x[1, :], x[2, :], 'b', linewidth=2)
         ax.scatter(x[0, 0], x[1, 0], x[2, 0], c='g', marker='o', s=100)
-        ax.scatter(x[0, n-1], x[1, n-1], x[2, n-1], c='r', marker='o', s=100)
+        ax.scatter(x[0, n - 1], x[1, n - 1],
+                   x[2, n - 1], c='r', marker='o', s=100)
         ax.grid(True)
         ax.set_xlabel('<--X-->')
         ax.set_ylabel('<--Y-->')
@@ -275,16 +301,16 @@ def brownian_motion_simulation(m=3, n=1001, d=10.0, t=1.0):
         elif (m == 4):
             dx = np.random.randn(2)
             norm_dx = np.sqrt(np.sum(dx ** 2))
-            phi = np.arctan2(x[1, j-1], x[0, j-1])
-            rho = np.arccos(x[2, j-1])
+            phi = np.arctan2(x[1, j - 1], x[0, j - 1])
+            rho = np.arccos(x[2, j - 1])
             dx[0] = phi + s * dx[0] / norm_dx
             dx[1] = rho + s * dx[1] / norm_dx
         elif (m == 5):
             dx = np.random.randn(3)
             norm_dx = np.sqrt(np.sum(dx ** 2))
-            rad = np.sqrt(np.sum(x[0:3,j-1] ** 2))
-            phi = np.arctan2(x[1, j-1]/rad, x[0, j-1]/rad)
-            rho = np.arccos(x[2, j-1]/rad)
+            rad = np.sqrt(np.sum(x[0:3, j - 1] ** 2))
+            phi = np.arctan2(x[1, j - 1] / rad, x[0, j - 1] / rad)
+            rho = np.arccos(x[2, j - 1] / rad)
             dx[0] = phi + s * dx[0] / norm_dx
             dx[1] = rho + s * dx[1] / norm_dx
             dx[2] = 1 + s * dx[2] / norm_dx / 2
@@ -296,15 +322,15 @@ def brownian_motion_simulation(m=3, n=1001, d=10.0, t=1.0):
 
         #  Each position is the sum of the previous steps.
         if (m == 4):
-            x[0, j] = np.cos(dx[0])*np.sin(dx[1])
-            x[1, j] = np.sin(dx[0])*np.sin(dx[1])
+            x[0, j] = np.cos(dx[0]) * np.sin(dx[1])
+            x[1, j] = np.sin(dx[0]) * np.sin(dx[1])
             x[2, j] = np.cos(dx[1])
         elif (m == 5):
-            x[0, j] = dx[2]*np.cos(dx[0])*np.sin(dx[1])
-            x[1, j] = dx[2]*np.sin(dx[0])*np.sin(dx[1])
-            x[2, j] = dx[2]*np.cos(dx[1])
+            x[0, j] = dx[2] * np.cos(dx[0]) * np.sin(dx[1])
+            x[1, j] = dx[2] * np.sin(dx[0]) * np.sin(dx[1])
+            x[2, j] = dx[2] * np.cos(dx[1])
         else:
-            x[0:m, j] = x[0:m, j-1] + dx[0:m]
+            x[0:m, j] = x[0:m, j - 1] + dx[0:m]
     return x
 
 
@@ -389,6 +415,8 @@ def timestamp():
 
 
 if __name__ == '__main__':
+    obj = BrownMotion()
+    obj.plot_pplt3d()
     timestamp()
 
     print('')
