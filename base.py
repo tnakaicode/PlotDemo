@@ -45,6 +45,12 @@ class plot2d (object):
         self.ax_y = self.div.append_axes(
             "right", 1.0, pad=0.5, sharey=self.axs)
         self.ax_y.grid()
+    
+    def Show(self):
+        try:
+            plt.show()
+        except AttributeError:
+            pass
 
 
 class plot3d (object):
