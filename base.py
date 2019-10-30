@@ -112,6 +112,12 @@ class plot3d (object):
         #self.axs.set_xlim3d(-10, 10)
         #self.axs.set_ylim3d(-10, 10)
         #self.axs.set_zlim3d(-10, 10)
+    
+    def Show(self):
+        try:
+            plt.show()
+        except AttributeError:
+            pass
 
 
 def pnt_trf_vec(pnt=gp_Pnt(), vec=gp_Vec()):
