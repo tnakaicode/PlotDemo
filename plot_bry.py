@@ -46,7 +46,9 @@ class GenBoundary (plot2d):
 
     def _Spline(self, event):
         num = len(self.xx)
-        tck, u = interpolate.splprep([self.xx, self.yy], k=self.kk, s=0)
+        tck, u = interpolate.splprep(
+            [self.xx + [self.xx[0]], self.yy + [self.yy[0]]], k=self.kk, s=0
+        )
         pu = np.linspace(0, 1, num=self.pn * num)
         spline = interpolate.splev(pu, tck)
         self.spl.set_xdata(spline[0])
