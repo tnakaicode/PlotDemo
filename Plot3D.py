@@ -13,9 +13,18 @@ from base import plotocc
 
 if __name__ == '__main__':
     obj = plotocc()
-    obj.show_box()
+    obj.show_axs_pln(scale=25)
+
+    axs = gp_Ax3(gp_Pnt(0, 0, 0), gp_Dir(0, 0, 1))
+    obj.show_box(axs, lxyz=[100, 50, 100])
+
+    axs = gp_Ax3(gp_Pnt(0, 0, 0), gp_Dir(1, 0, 1))
+    obj.show_box(axs, lxyz=[100, 50, 100])
 
     axs = gp_Ax3(gp_Pnt(-100, 0, 0), gp_Dir(0, 1, 1))
     obj.show_axs_pln(axs, scale=25)
+
+    axs = gp_Ax3(gp_Pnt(100, 0, 0), gp_Dir(0, 1, 1))
+    obj.show_ellipsoid(axs, rxyz=[100, 30, 50])
 
     obj.show()

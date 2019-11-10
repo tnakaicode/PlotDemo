@@ -45,7 +45,7 @@ class plot2d (object):
         self.ax_y = self.div.append_axes(
             "right", 1.0, pad=0.5, sharey=self.axs)
         self.ax_y.grid()
-    
+
     def Show(self):
         try:
             plt.show()
@@ -112,7 +112,7 @@ class plot3d (object):
         #self.axs.set_xlim3d(-10, 10)
         #self.axs.set_ylim3d(-10, 10)
         #self.axs.set_zlim3d(-10, 10)
-    
+
     def Show(self):
         try:
             plt.show()
@@ -163,9 +163,19 @@ class plotocc (object):
     def __init__(self):
         self.display, self.start_display, self.add_menu, self.add_functionto_menu = init_display()
 
-    def show_box(self):
-        self.display.DisplayShape(gp_Pnt())
-        self.display.DisplayShape(make_box(100, 100, 100))
+    def show_box(self, axs=gp_Ax3(), lxyz=[100, 100, 100]):
+        box = make_box(*lxyz)
+        ax1 = gp_Ax3(
+            gp_Pnt(-lxyz[0] / 2, -lxyz[1] / 2, -lxyz[2] / 2),
+            gp_Dir(0, 0, 1)
+        )
+        trf = gp_Trsf()
+        trf.SetTransformation(axs, gp_Ax3())
+        trf.SetTransformation(ax1, gp_Ax3())
+        box.Location(TopLoc_Location(trf))
+        self.display.DisplayShape(axs.Location())
+        self.show_axs_pln(axs, scale=lxyz[0])
+        self.display.DisplayShape(box, transparency=0.7)
 
     def show_pnt(self, xyz=[0, 0, 0]):
         self.display.DisplayShape(gp_Pnt(*xyz))
