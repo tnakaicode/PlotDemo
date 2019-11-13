@@ -22,16 +22,17 @@ props = dict(boxstyle='round', facecolor='wheat')
 timelabel = ax.text(0.9, 0.9, "", transform=ax.transAxes,
                     ha="right", bbox=props)
 t = np.ones(10) * time.time()
-p = [ax.contour(X, Y, f(X, Y, 0, 0), levels, cmap=cmap)]
+p = [ax.contourf(X, Y, f(X, Y, 0, 0), levels, cmap="jet")]
 
 
 def update(i):
     for tp in p[0].collections:
         tp.remove()
-    p[0] = ax.contourf(X, Y, f(X, Y, alpha[i], alpha[i]), levels, cmap=cmap)
+    p[0] = ax.contourf(X, Y, f(X, Y, alpha[i], alpha[i]), levels, cmap="jet")
     t[1:] = t[0:-1]
     t[0] = time.time()
     timelabel.set_text("{:.3f} fps".format(-1. / np.diff(t).mean()))
+    # fig.colorbar(p[0])
     return p[0].collections + [timelabel]
 
 
