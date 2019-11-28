@@ -2,16 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 
-from OCC.BRepBuilderAPI import (BRepBuilderAPI_MakeFace,
+from OCC.CoreBRepBuilderAPI import (BRepBuilderAPI_MakeFace,
                                 BRepBuilderAPI_MakePolygon,
                                 BRepBuilderAPI_MakeShell,
                                 BRepBuilderAPI_MakeSolid)
-from OCC.GeomAPI import GeomAPI_Interpolate, GeomAPI_PointsToBSpline
-from OCC.GeomLib import GeomLib_Interpolate
-from OCC.Geom import Geom_BSplineCurve
-from OCC.gp import gp_Ax1, gp_Ax2, gp_Ax3, gp_Dir, gp_Pnt, gp_Vec
-from OCC.TColgp import TColgp_Array1OfPnt, TColgp_HArray1OfPnt
-from OCC.TColStd import TColStd_Array1OfReal
+from OCC.CoreGeomAPI import GeomAPI_Interpolate, GeomAPI_PointsToBSpline
+from OCC.CoreGeomLib import GeomLib_Interpolate
+from OCC.CoreGeom import Geom_BSplineCurve
+from OCC.Coregp import gp_Ax1, gp_Ax2, gp_Ax3, gp_Dir, gp_Pnt, gp_Vec
+from OCC.CoreTColgp import TColgp_Array1OfPnt, TColgp_HArray1OfPnt
+from OCC.CoreTColStd import TColStd_Array1OfReal
 from OCCUtils.Construct import make_edge, make_face, make_polygon
 from scipy.spatial import ConvexHull
 

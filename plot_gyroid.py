@@ -2,13 +2,13 @@ import numpy as np
 import math
 
 from OCC.Display.SimpleGui import init_display
-from OCC.gp import gp_Pnt
-from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace, BRepBuilderAPI_MakeWire
-from OCC.TColgp import TColgp_Array2OfPnt
-from OCC.GeomAPI import GeomAPI_PointsToBSplineSurface
-from OCC.GeomAbs import GeomAbs_C2
-from OCC.GeomAbs import GeomAbs_Intersection
-from OCC.BRepOffset import BRepOffset_MakeOffset, BRepOffset_Skin
+from OCC.Coregp import gp_Pnt
+from OCC.CoreBRepBuilderAPI import BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace, BRepBuilderAPI_MakeWire
+from OCC.CoreTColgp import TColgp_Array2OfPnt
+from OCC.CoreGeomAPI import GeomAPI_PointsToBSplineSurface
+from OCC.CoreGeomAbs import GeomAbs_C2
+from OCC.CoreGeomAbs import GeomAbs_Intersection
+from OCC.CoreBRepOffset import BRepOffset_MakeOffset, BRepOffset_Skin
 
 
 def gyroid(x, y, z, t):

@@ -8,16 +8,16 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
 
 from OCC.Display.SimpleGui import init_display
-from OCC.gp import gp_Pnt, gp_Vec, gp_Dir
-from OCC.gp import gp_Ax1, gp_Ax2, gp_Ax3
-from OCC.gp import gp_XYZ
-from OCC.gp import gp_Lin
-from OCC.gp import gp_Mat, gp_GTrsf, gp_Trsf
-from OCC.TopoDS import TopoDS_Shape
-from OCC.TopLoc import TopLoc_Location
-from OCC.BRepPrimAPI import BRepPrimAPI_MakeSphere
-from OCC.BRepBuilderAPI import BRepBuilderAPI_MakeWire
-from OCC.BRepBuilderAPI import BRepBuilderAPI_GTransform
+from OCC.Coregp import gp_Pnt, gp_Vec, gp_Dir
+from OCC.Coregp import gp_Ax1, gp_Ax2, gp_Ax3
+from OCC.Coregp import gp_XYZ
+from OCC.Coregp import gp_Lin
+from OCC.Coregp import gp_Mat, gp_GTrsf, gp_Trsf
+from OCC.CoreTopoDS import TopoDS_Shape
+from OCC.CoreTopLoc import TopLoc_Location
+from OCC.CoreBRepPrimAPI import BRepPrimAPI_MakeSphere
+from OCC.CoreBRepBuilderAPI import BRepBuilderAPI_MakeWire
+from OCC.CoreBRepBuilderAPI import BRepBuilderAPI_GTransform
 from OCCUtils.Construct import make_box, make_line, make_wire
 from OCCUtils.Construct import make_plane, make_polygon
 from OCCUtils.Construct import point_to_vector, vector_to_point

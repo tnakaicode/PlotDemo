@@ -6,9 +6,9 @@ from scipy.integrate import ode, complex_ode
 sys.path.append(os.path.join('./'))
 
 from OCC.Display.SimpleGui import init_display
-from OCC.gp import gp_Pnt, gp_Vec, gp_Dir
-from OCC.gp import gp_Ax1, gp_Ax2, gp_Ax3
-from OCC.gp import gp_Lin, gp_XYZ
+from OCC.Coregp import gp_Pnt, gp_Vec, gp_Dir
+from OCC.Coregp import gp_Ax1, gp_Ax2, gp_Ax3
+from OCC.Coregp import gp_Lin, gp_XYZ
 from OCCUtils.Construct import make_box, make_line
 from OCCUtils.Construct import make_plane, make_polygon
 from OCCUtils.Construct import make_wire, make_edge
