@@ -7,13 +7,13 @@ import time
 from mpl_toolkits.mplot3d import Axes3D
 from sys import exit
 
-from OCC.Coregp import gp_Pnt, gp_Vec, gp_Dir
-from OCC.Coregp import gp_Ax1, gp_Ax2, gp_Ax3
-from OCC.Coregp import gp_Lin
-from OCC.CoreGeom import Geom_Line, Geom_Surface
-from OCC.CoreBRep import BRep_Tool_Surface
-from OCC.CoreGeomAPI import GeomAPI_IntCS
-from OCC.CoreGeomLProp import GeomLProp_SurfaceTool
+from OCC.Core.gp import gp_Pnt, gp_Vec, gp_Dir
+from OCC.Core.gp import gp_Ax1, gp_Ax2, gp_Ax3
+from OCC.Core.gp import gp_Lin
+from OCC.Core.Geom import Geom_Line, Geom_Surface
+from OCC.Core.BRep import BRep_Tool_Surface
+from OCC.Core.GeomAPI import GeomAPI_IntCS
+from OCC.Core.GeomLProp import GeomLProp_SurfaceTool
 from OCCUtils.Topology import Topo
 
 from base import plot2d, plot3d, plotocc
