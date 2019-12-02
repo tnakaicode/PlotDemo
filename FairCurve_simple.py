@@ -1,33 +1,22 @@
-#!/usr/bin/env python
-
-# Copyright 2009-2015 Jelle Feringa (jelleferinga@gmail.com)
-##
-# This file is part of pythonOCC.
-##
-# pythonOCC is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-##
-# pythonOCC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-##
-# You should have received a copy of the GNU Lesser General Public License
-# along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 import numpy as np
+import matplotlib.pyplot as plt
 import math
 import time
 import sys
 
-from OCC.Core.gp import gp_Pnt2d, gp_Pln
-from OCC.Core.Geom import Geom_Plane
-from OCC.Core.FairCurve import FairCurve_MinimalVariation, FairCurve_Newton
-from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakeEdge
-from OCC.Core.FEmTool import FEmTool_ProfileMatrix
 from OCC.Display.SimpleGui import init_display
+from OCC.Core.gp import gp_Pnt, gp_Vec, gp_Dir
+from OCC.Core.gp import gp_Ax1, gp_Ax2, gp_Ax3
+from OCC.Core.gp import gp_XYZ
+from OCC.Core.gp import gp_Lin, gp_Pln
+from OCC.Core.gp import gp_Mat, gp_GTrsf, gp_Trsf
+from OCC.Core.gp import gp_Pnt2d
+from OCC.Core.Geom import Geom_Plane
+from OCC.Core.FairCurve import FairCurve_MinimalVariation
+from OCC.Core.FairCurve import FairCurve_Newton
+from OCC.Core.math import math_NewtonMinimum, math_GaussSingleIntegration
+from OCC.Core.FEmTool import FEmTool_ProfileMatrix, FEmTool_SparseMatrix
+from OCC.Core.BOPTools import BOPTools_AlgoTools2D
 
 from base import plotocc
 
