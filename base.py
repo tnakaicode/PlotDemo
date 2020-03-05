@@ -53,11 +53,12 @@ def create_tempdir(flag=1):
 class SetDir (object):
 
     def __init__(self):
-        self.create_tempdir()
-
         pyfile = sys.argv[0]
         self.filename = os.path.basename(pyfile)
         self.rootname, ext_name = os.path.splitext(self.filename)
+        
+        self.create_tempdir()
+        self.tempname = self.tmpdir + self.rootname
         print(self.rootname)
 
     def create_tempdir(self, flag=1):
@@ -72,6 +73,7 @@ class SetDir (object):
         else:
             self.tmpdir = "./temp_{}{:03}/".format(
                 self.datenm, self.dirnum - 1)
+        self.tempname = self.tmpdir + self.rootname
         print(self.tmpdir)
 
 
@@ -89,7 +91,7 @@ class plot2d (SetDir):
 
     def div_axs(self):
         self.div = make_axes_locatable(self.axs)
-        #self.axs.set_aspect('equal')
+        # self.axs.set_aspect('equal')
 
         self.ax_x = self.div.append_axes(
             "bottom", 1.0, pad=0.5, sharex=self.axs)
@@ -170,6 +172,11 @@ class plot3d (SetDir):
         #self.axs.set_xlim3d(-10, 10)
         #self.axs.set_ylim3d(-10, 10)
         #self.axs.set_zlim3d(-10, 10)
+
+    def SavePng(self, pngname=None):
+        if pngname == None:
+            pngname = self.tmpdir + self.rootname + ".png"
+        self.fig.savefig(pngname)
 
     def Show(self):
         try:

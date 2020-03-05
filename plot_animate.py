@@ -14,11 +14,12 @@ class AniFunc (plot2d):
         self.ydata = []
         self.ln, = self.axs.plot([], [], 'ro')
 
-        FuncAnimation(
+        ani = FuncAnimation(
             self.fig, self.update,
             frames=np.linspace(0, 2 * np.pi, 128),
             init_func=self.init, blit=True
         )
+        ani.save(self.tempname + ".gif", writer="pillow")
 
     def init(self):
         self.axs.set_xlim(0, 2 * np.pi)
