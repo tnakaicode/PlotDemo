@@ -79,6 +79,9 @@ class plot2d (SetDir):
 
     def __init__(self):
         SetDir.__init__(self)
+        self.new_fig()
+
+    def new_fig(self):
         self.fig, self.axs = plt.subplots()
         self.axs.set_aspect('equal')
         self.axs.xaxis.grid()
@@ -86,7 +89,7 @@ class plot2d (SetDir):
 
     def div_axs(self):
         self.div = make_axes_locatable(self.axs)
-        self.axs.set_aspect('equal')
+        #self.axs.set_aspect('equal')
 
         self.ax_x = self.div.append_axes(
             "bottom", 1.0, pad=0.5, sharex=self.axs)
@@ -94,6 +97,11 @@ class plot2d (SetDir):
         self.ax_y = self.div.append_axes(
             "right", 1.0, pad=0.5, sharey=self.axs)
         self.ax_y.grid()
+
+    def SavePng(self, pngname=None):
+        if pngname == None:
+            pngname = self.tmpdir + self.rootname + ".png"
+        self.fig.savefig(pngname)
 
     def Show(self):
         try:

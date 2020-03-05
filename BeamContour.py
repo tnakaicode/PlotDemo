@@ -123,7 +123,7 @@ while (i <= 300):
     sys.stdout.flush()
     i += 1
     relax()
-    
+
 
 for i in range(0, Nxmax + 1):
     for j in range(0, Nymax + 1):
@@ -133,9 +133,11 @@ obj = plot2d()
 img = obj.axs.contourf(u, origin='lower', cmap="jet")
 obj.axs.set_title('Stream function - 2D Flow over a beam')
 obj.fig.colorbar(img)
+obj.fig.savefig(obj.tmpdir + obj.rootname + "-Stream.png")
 
-obj = plot2d()
+obj.new_fig()
 img = obj.axs.contourf(w, origin='lower', cmap="jet")
 obj.axs.set_title('Vorticity - 2D Flow over a beam')
 obj.fig.colorbar(img)
+obj.fig.savefig(obj.tmpdir + obj.rootname + "-Velocity.png")
 plt.show()

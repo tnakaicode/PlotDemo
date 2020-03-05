@@ -10,13 +10,15 @@ from OCC.Core.GeomAbs import GeomAbs_C2
 from OCC.Core.GeomAbs import GeomAbs_Intersection
 from OCC.Core.BRepOffset import BRepOffset_MakeOffset, BRepOffset_Skin
 
+from base import plotocc
+
 
 def gyroid(x, y, z, t):
     return np.cos(x) * np.sin(y) + np.cos(y) * np.sin(z) + np.cos(z) * np.sin(x) - t
 
 
 if __name__ == '__main__':
-    display, start_display, add_menu, add_function_to_menu = init_display()
+    obj = plotocc()
 
     lat = 2.0
     res = 11
@@ -41,7 +43,6 @@ if __name__ == '__main__':
         crve = GeomAPI_PointsToBSplineSurface(
             pts, 3, 8, GeomAbs_C2, 0.001).Surface()
         face = BRepBuilderAPI_MakeFace(crve, 1e-6).Face()
-        display.DisplayShape(face)
+        obj.display.DisplayShape(face)
 
-    display.FitAll()
-    start_display()
+    obj.show()

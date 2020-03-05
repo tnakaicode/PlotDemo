@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from control import matlab
 
+from base import plot2d
 
 # pade近似を表現,前提として5秒のむだ時間を設定
 # まずパデ近似の分子、分母を求める
@@ -24,7 +25,9 @@ y4, T = matlab.step(P4, t)
 y6, T = matlab.step(P6, t)
 y8, T = matlab.step(P8, t)
 y10, T = matlab.step(P10, t)
-# 結果の表示
+
+obj = plot2d()
+obj.axs.set_aspect('auto')
 plt.plot(T, y2, label="2")
 plt.plot(T, y4, label="4")
 plt.plot(T, y6, label="6")
@@ -35,4 +38,4 @@ plt.ylim((-0.50, 1.1))
 plt.xlabel("Time[sec.]")
 plt.ylabel("y(t)")
 plt.legend()
-plt.show()
+obj.SavePng()

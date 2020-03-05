@@ -56,6 +56,7 @@ class NavierStokes (plot2d):
         self.fig.savefig(self.tmpdir + "CFD_{:d}.png".format(self.t))
 
     def run(self):
+        self.create_tempdir(flag=-1)
         for n in range(500):
             self.t += 1
             # 中間速度を計算
@@ -68,13 +69,14 @@ class NavierStokes (plot2d):
             self.computeVelocity()
 
             # self.axs.clear()
-            self.cbr.remove()
-            for col in self.img.collections:
-                self.axs.collections.remove(col)
+            # self.cbr.remove()
+            # for col in self.img.collections:
+            #    self.axs.collections.remove(col)
 
             # for col in self.fig.collections:
             #    self.fig.collections.remove(col)
 
+            self.new_fig()
             self.img = self.axs.contourf(self.x, self.y, self.p, cmap="jet")
             self.cbr = self.fig.colorbar(self.img)
             self.vec.set_UVC(self.u * 1000, self.v * 1000)
@@ -86,6 +88,7 @@ class NavierStokes (plot2d):
             # self.cbr.draw_all()
             self.fig.savefig(self.tmpdir + "CFD_{:03d}.png".format(self.t))
             self.fig.savefig(self.tmpdir + "CFD.png")
+            plt.close()
 
     def norm_p(self):
         p_min = self.p.min()
