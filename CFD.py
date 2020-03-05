@@ -84,7 +84,7 @@ class NavierStokes (plot2d):
             # self.cbr.set_ticks(cbr_ticks)
             # plt.draw()
             # self.cbr.draw_all()
-            self.fig.savefig(self.tmpdir + "CFD_{:d}.png".format(self.t))
+            self.fig.savefig(self.tmpdir + "CFD_{:03d}.png".format(self.t))
             self.fig.savefig(self.tmpdir + "CFD.png")
 
     def norm_p(self):

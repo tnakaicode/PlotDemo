@@ -34,7 +34,7 @@ class BrownMotion (plotocc):
         self.get_surf()
 
         lin = Geom_Line(self.axis.Location(), gp_Dir(0, 0, 1))
-        self.int_surf = GeomAPI_IntCS(lin.GetHandle(), self.ellp_surf)
+        self.int_surf = GeomAPI_IntCS(lin, self.ellp_surf)
 
         self.dm = 3
         self.get_pnt_ellipsoid(self.rand_pnt())
@@ -72,7 +72,7 @@ class BrownMotion (plotocc):
 
     def get_pnt_ellipsoid(self, pnt=gp_Pnt(0, 0, 1)):
         vec = gp_Vec(gp_Pnt(), pnt)
-        h_lin = Geom_Line(gp_Ax1(gp_Pnt(), gp_Dir(vec))).GetHandle()
+        h_lin = Geom_Line(gp_Ax1(gp_Pnt(), gp_Dir(vec)))
         self.int_surf.Perform(h_lin, self.ellp_surf)
         u, v, w = self.int_surf.Parameters(1)
         GeomLProp_SurfaceTool().Value(self.ellp_surf, u, v, pnt)

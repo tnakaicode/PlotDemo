@@ -35,10 +35,30 @@ import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
 
 
+def create_tempdir(flag=1):
+    print(datetime.date.today())
+    datenm = "{0:%Y%m%d}".format(datetime.date.today())
+    dirnum = len(glob.glob("./temp_" + datenm + "*/"))
+    if flag == -1 or dirnum == 0:
+        tmpdir = "./temp_{}{:03}/".format(datenm, dirnum)
+        os.makedirs(tmpdir)
+        fp = open(tmpdir + "not_ignore.txt", "w")
+        fp.close()
+    else:
+        tmpdir = "./temp_{}{:03}/".format(datenm, dirnum - 1)
+    print(tmpdir)
+    return tmpdir
+
+
 class SetDir (object):
 
     def __init__(self):
         self.create_tempdir()
+
+        pyfile = sys.argv[0]
+        self.filename = os.path.basename(pyfile)
+        self.rootname, ext_name = os.path.splitext(self.filename)
+        print(self.rootname)
 
     def create_tempdir(self, flag=1):
         print(datetime.date.today())
@@ -191,8 +211,8 @@ def gen_ellipsoid(axs=gp_Ax3(), rxyz=[10, 20, 30]):
 class plotocc (SetDir):
 
     def __init__(self):
-        SetDir.__init__(self)
         self.display, self.start_display, self.add_menu, self.add_functionto_menu = init_display()
+        SetDir.__init__(self)
 
     def show_box(self, axs=gp_Ax3(), lxyz=[100, 100, 100]):
         box = make_box(*lxyz)
@@ -245,6 +265,7 @@ class plotocc (SetDir):
 
     def show(self):
         self.display.FitAll()
+        self.display.View.Dump(self.tmpdir + self.rootname + ".png")
         self.start_display()
 
 

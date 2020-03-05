@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from base import plot2d
 
 
-class GenArea (object):
+class GenArea (plot2d):
 
     def __init__(self):
         plot2d.__init__(self)
@@ -27,7 +27,7 @@ class GenArea (object):
 
     def data_ouput(self):
         dat = np.array(obj.pnt)
-        np.savetxt("./tmp/data_area.txt", dat)
+        np.savetxt(self.tmpdir + "data_area.txt", dat)
 
 
 if __name__ == '__main__':
@@ -37,6 +37,7 @@ if __name__ == '__main__':
 
     dat = np.array(obj.pnt)
     obj.axs.plot(dat[:, 0], dat[:, 1])
+    plt.savefig(obj.tmpdir + "data_area.png")
     plt.show()
 
     obj.data_ouput()

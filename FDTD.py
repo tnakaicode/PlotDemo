@@ -49,7 +49,7 @@ class FDTD1d (plot2d):
         self.ani = FuncAnimation(
             self.fig, self.update, frames=np.linspace(0, 2 * np.pi, 128)
         )
-        self.ani.save("./tmp/Sample.gif", writer='imagemagick')
+        self.ani.save(self.tmpdir + "Sample.gif", writer='imagemagick')
 
     def update(self, frame):
         self.dt += 10
