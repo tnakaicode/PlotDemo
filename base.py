@@ -3,6 +3,14 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 import sys
 import pickle
+import json
+import time
+import os
+import glob
+import shutil
+import datetime
+import platform
+from optparse import OptionParser
 from matplotlib import animation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
@@ -27,9 +35,30 @@ import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
 
 
-class plot2d (object):
+class SetDir (object):
 
     def __init__(self):
+        self.create_tempdir()
+
+    def create_tempdir(self, flag=1):
+        print(datetime.date.today())
+        self.datenm = "{0:%Y%m%d}".format(datetime.date.today())
+        self.dirnum = len(glob.glob("./temp_" + self.datenm + "*/"))
+        if flag == -1 or self.dirnum == 0:
+            self.tmpdir = "./temp_{}{:03}/".format(self.datenm, self.dirnum)
+            os.makedirs(self.tmpdir)
+            fp = open(self.tmpdir + "not_ignore.txt", "w")
+            fp.close()
+        else:
+            self.tmpdir = "./temp_{}{:03}/".format(
+                self.datenm, self.dirnum - 1)
+        print(self.tmpdir)
+
+
+class plot2d (SetDir):
+
+    def __init__(self):
+        SetDir.__init__(self)
         self.fig, self.axs = plt.subplots()
         self.axs.set_aspect('equal')
         self.axs.xaxis.grid()
@@ -53,9 +82,10 @@ class plot2d (object):
             pass
 
 
-class plot3d (object):
+class plot3d (SetDir):
 
     def __init__(self):
+        SetDir.__init__(self)
         self.fig = plt.figure()
         self.axs = self.fig.add_subplot(111, projection='3d')
         #self.axs = self.fig.gca(projection='3d')
@@ -158,9 +188,10 @@ def gen_ellipsoid(axs=gp_Ax3(), rxyz=[10, 20, 30]):
     return ellips
 
 
-class plotocc (object):
+class plotocc (SetDir):
 
     def __init__(self):
+        SetDir.__init__(self)
         self.display, self.start_display, self.add_menu, self.add_functionto_menu = init_display()
 
     def show_box(self, axs=gp_Ax3(), lxyz=[100, 100, 100]):

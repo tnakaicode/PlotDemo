@@ -53,7 +53,7 @@ class NavierStokes (plot2d):
         self.img = self.axs.contourf(self.x, self.y, self.p, cmap="jet")
         self.vec = self.axs.quiver(self.x, self.y, self.u, self.v, scale=1000)
         self.cbr = self.fig.colorbar(self.img)
-        self.fig.savefig("./tmp/CFD_{:d}.png".format(self.t))
+        self.fig.savefig(self.tmpdir + "CFD_{:d}.png".format(self.t))
 
     def run(self):
         for n in range(500):
@@ -67,25 +67,25 @@ class NavierStokes (plot2d):
             # 中間速度を修正して速度を計算
             self.computeVelocity()
 
-            #self.axs.clear()
+            # self.axs.clear()
             self.cbr.remove()
             for col in self.img.collections:
                 self.axs.collections.remove(col)
-            
-            #for col in self.fig.collections:
+
+            # for col in self.fig.collections:
             #    self.fig.collections.remove(col)
-            
+
             self.img = self.axs.contourf(self.x, self.y, self.p, cmap="jet")
             self.cbr = self.fig.colorbar(self.img)
-            self.vec.set_UVC(self.u*1000, self.v*1000)
-            
+            self.vec.set_UVC(self.u * 1000, self.v * 1000)
+
             cbr_ticks = np.linspace(self.p.min(), self.p.max(), 11)
-            #self.cbr.update_bruteforce(self.img)
-            #self.cbr.set_ticks(cbr_ticks)
-            #plt.draw()
-            #self.cbr.draw_all()
-            self.fig.savefig("./tmp/CFD_{:d}.png".format(self.t))
-            self.fig.savefig("./tmp/CFD.png")
+            # self.cbr.update_bruteforce(self.img)
+            # self.cbr.set_ticks(cbr_ticks)
+            # plt.draw()
+            # self.cbr.draw_all()
+            self.fig.savefig(self.tmpdir + "CFD_{:d}.png".format(self.t))
+            self.fig.savefig(self.tmpdir + "CFD.png")
 
     def norm_p(self):
         p_min = self.p.min()

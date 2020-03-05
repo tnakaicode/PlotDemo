@@ -8,3 +8,5 @@ __pycache__/
 
 # data
 tmp/*
+temp_*/*
+*/temp_*/*

@@ -28,4 +28,5 @@ if __name__ == '__main__':
     plt.legend(loc="upper right")
     plt.xlabel("Time [s]")
     plt.ylabel("Amplitude")
+    plt.savefig(obj.tmpdir + "Savitzky-Golay.png")
     plt.show()
