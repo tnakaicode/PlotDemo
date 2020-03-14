@@ -24,6 +24,7 @@ class ShowSection(plot2d):
         self.vy = self.axs.axvline(x=self.sx, ymin=self.ys, ymax=self.ye)
         self.vy.set_color("k")
         plt.colorbar(self.im, ax=self.axs, shrink=0.9)
+        self.SavePng_Serial()
 
         self.fig.canvas.mpl_connect('button_press_event', self.onclick)
 
@@ -36,6 +37,7 @@ class ShowSection(plot2d):
         self.pl_y.set_ydata(self.mesh[1][:, self.my])
         self.hx.set_ydata(self.sy)
         self.vy.set_xdata(self.sx)
+        self.SavePng_Serial()
         plt.draw()
 
     def onclick(self, event):

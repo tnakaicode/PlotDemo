@@ -50,14 +50,23 @@ def create_tempdir(flag=1):
     return tmpdir
 
 
+def create_tempnum(name, tmpdir="./", ext=".tar.gz"):
+    num = len(glob.glob(tmpdir + name + "*" + ext)) + 1
+    filename = '{}{}_{:03}{}'.format(tmpdir, name, num, ext)
+    #print(num, filename)
+    return filename
+
+
 class SetDir (object):
 
     def __init__(self):
+        self.tempname = ""
+        self.rootname = ""
+        self.create_tempdir()
+
         pyfile = sys.argv[0]
         self.filename = os.path.basename(pyfile)
         self.rootname, ext_name = os.path.splitext(self.filename)
-        
-        self.create_tempdir()
         self.tempname = self.tmpdir + self.rootname
         print(self.rootname)
 
@@ -73,21 +82,28 @@ class SetDir (object):
         else:
             self.tmpdir = "./temp_{}{:03}/".format(
                 self.datenm, self.dirnum - 1)
-        self.tempname = self.tmpdir + self.rootname
         print(self.tmpdir)
 
 
 class plot2d (SetDir):
 
-    def __init__(self):
+    def __init__(self, aspect="equal"):
         SetDir.__init__(self)
-        self.new_fig()
+        self.new_fig(aspect)
 
-    def new_fig(self):
+    def new_fig(self, aspect="equal"):
         self.fig, self.axs = plt.subplots()
-        self.axs.set_aspect('equal')
+        self.axs.set_aspect(aspect)
         self.axs.xaxis.grid()
         self.axs.yaxis.grid()
+
+    def add_axs(self, row=1, col=1, num=1, aspect="auto"):
+        self.axs.set_axis_off()
+        axs = self.fig.add_subplot(row, col, num)
+        axs.set_aspect(aspect)
+        axs.xaxis.grid()
+        axs.yaxis.grid()
+        return axs
 
     def div_axs(self):
         self.div = make_axes_locatable(self.axs)
@@ -95,14 +111,51 @@ class plot2d (SetDir):
 
         self.ax_x = self.div.append_axes(
             "bottom", 1.0, pad=0.5, sharex=self.axs)
-        self.ax_x.grid()
+        self.ax_x.xaxis.grid(True, zorder=0)
+        self.ax_x.yaxis.grid(True, zorder=0)
+
         self.ax_y = self.div.append_axes(
             "right", 1.0, pad=0.5, sharey=self.axs)
-        self.ax_y.grid()
+        self.ax_y.xaxis.grid(True, zorder=0)
+        self.ax_y.yaxis.grid(True, zorder=0)
+
+    def contourf_sub(self, mesh, func, sxy=[0, 0], pngname=None):
+        self.new_fig()
+        self.div_axs()
+        nx, ny = mesh[0].shape
+        sx, sy = sxy
+        xs, xe = mesh[0][0, 0], mesh[0][0, -1]
+        ys, ye = mesh[1][0, 0], mesh[1][-1, 0]
+        mx = np.searchsorted(mesh[0][0, :], sx) - 1
+        my = np.searchsorted(mesh[1][:, 0], sy) - 1
+
+        self.ax_x.plot(mesh[0][mx, :], func[mx, :])
+        self.ax_x.set_title("y = {:.2f}".format(sy))
+        self.ax_y.plot(func[:, my], mesh[1][:, my])
+        self.ax_y.set_title("x = {:.2f}".format(sx))
+        im = self.axs.contourf(*mesh, func, cmap="jet")
+        self.fig.colorbar(im, ax=self.axs, shrink=0.9)
+        self.fig.tight_layout()
+        self.SavePng(pngname)
+
+    def contourf_tri(self, x, y, z):
+        self.new_fig()
+        self.axs.tricontourf(x, y, z, cmap="jet")
 
     def SavePng(self, pngname=None):
         if pngname == None:
             pngname = self.tmpdir + self.rootname + ".png"
+        self.fig.savefig(pngname)
+
+    def SavePng_Serial(self, pngname=None):
+        if pngname == None:
+            pngname = self.rootname
+            dirname = self.tmpdir
+        else:
+            dirname = os.path.dirname(pngname) + "/"
+            basename = os.path.basename(pngname)
+            pngname, extname = os.path.splitext(basename)
+        pngname = create_tempnum(pngname, dirname, ".png")
         self.fig.savefig(pngname)
 
     def Show(self):
@@ -172,11 +225,6 @@ class plot3d (SetDir):
         #self.axs.set_xlim3d(-10, 10)
         #self.axs.set_ylim3d(-10, 10)
         #self.axs.set_zlim3d(-10, 10)
-
-    def SavePng(self, pngname=None):
-        if pngname == None:
-            pngname = self.tmpdir + self.rootname + ".png"
-        self.fig.savefig(pngname)
 
     def Show(self):
         try:
@@ -280,7 +328,7 @@ class plotocc (SetDir):
 
     def show(self):
         self.display.FitAll()
-        self.display.View.Dump(self.tmpdir + self.rootname + ".png")
+        self.display.View.Dump(self.tempname + ".png")
         self.start_display()
 
 
@@ -388,3 +436,7 @@ class LineDrawer(object):
             plt.show()
         except AttributeError:
             pass
+
+
+if __name__ == '__main__':
+    create_tempdir(-1)
