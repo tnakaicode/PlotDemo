@@ -22,13 +22,9 @@ obj.axs.view_init(45, 60)
 V_normalized = (V - V.min().min())
 V_normalized = V_normalized / V_normalized.max().max()
 
-obj.axs.plot_surface(X, Y, Z, facecolors=plt.cm.jet(V_normalized))
-obj.axs.set_xlabel('x', fontsize=18)
-obj.axs.set_ylabel('y', fontsize=18)
-obj.axs.set_zlabel('z', fontsize=18)
-
+img = obj.axs.plot_surface(X, Y, Z, facecolors=plt.cm.jet(V_normalized))
 m = cm.ScalarMappable(cmap=cm.jet)
 m.set_array(V)
-plt.colorbar(m)
+obj.fig.colorbar(m)
 
 obj.SavePng_Serial()
