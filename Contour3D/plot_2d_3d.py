@@ -21,3 +21,7 @@ obj.SavePng_Serial()
 obj.new_2Dfig()
 obj.axs.contourf(*mesh, func, cmap="jet")
 obj.SavePng_Serial()
+
+obj = plot3d()
+obj.axs.plot_surface(*mesh, func, cmap="jet")
+obj.SavePng_Serial()
