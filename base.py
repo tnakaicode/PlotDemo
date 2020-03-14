@@ -85,17 +85,72 @@ class SetDir (object):
         print(self.tmpdir)
 
 
-class plot2d (SetDir):
+class PlotBase(SetDir):
 
     def __init__(self, aspect="equal"):
         SetDir.__init__(self)
-        self.new_fig(aspect)
+        self.dim = 2
+        self.fig, self.axs = plt.subplots()
 
-    def new_fig(self, aspect="equal"):
+    def new_fig(self, aspect="equal", dim=None):
+        if dim == None:
+            self.new_fig(aspect=aspect, dim=self.dim)
+        elif self.dim == 2:
+            self.new_3Dfig()
+        elif self.dim == 3:
+            self.new_3Dfig()
+        else:
+            self.new_2Dfig()
+
+    def new_2Dfig(self, aspect="equal"):
         self.fig, self.axs = plt.subplots()
         self.axs.set_aspect(aspect)
         self.axs.xaxis.grid()
         self.axs.yaxis.grid()
+
+    def new_3Dfig(self, aspect="equal"):
+        self.fig = plt.figure()
+        self.axs = self.fig.add_subplot(111, projection='3d')
+        #self.axs = self.fig.gca(projection='3d')
+        # self.axs.set_aspect('equal')
+
+        self.axs.set_xlabel('x')
+        self.axs.set_ylabel('y')
+        self.axs.set_zlabel('z')
+
+        self.axs.xaxis.grid()
+        self.axs.yaxis.grid()
+        self.axs.zaxis.grid()
+
+    def SavePng(self, pngname=None):
+        if pngname == None:
+            pngname = self.tmpdir + self.rootname + ".png"
+        self.fig.savefig(pngname)
+
+    def SavePng_Serial(self, pngname=None):
+        if pngname == None:
+            pngname = self.rootname
+            dirname = self.tmpdir
+        else:
+            dirname = os.path.dirname(pngname) + "/"
+            basename = os.path.basename(pngname)
+            pngname, extname = os.path.splitext(basename)
+        pngname = create_tempnum(pngname, dirname, ".png")
+        self.fig.savefig(pngname)
+
+    def Show(self):
+        try:
+            plt.show()
+        except AttributeError:
+            pass
+
+
+class plot2d (PlotBase):
+
+    def __init__(self, aspect="equal"):
+        PlotBase.__init__(self)
+        self.dim = 2
+        self.new_fig(aspect)
 
     def add_axs(self, row=1, col=1, num=1, aspect="auto"):
         self.axs.set_axis_off()
@@ -142,48 +197,13 @@ class plot2d (SetDir):
         self.new_fig()
         self.axs.tricontourf(x, y, z, cmap="jet")
 
-    def SavePng(self, pngname=None):
-        if pngname == None:
-            pngname = self.tmpdir + self.rootname + ".png"
-        self.fig.savefig(pngname)
 
-    def SavePng_Serial(self, pngname=None):
-        if pngname == None:
-            pngname = self.rootname
-            dirname = self.tmpdir
-        else:
-            dirname = os.path.dirname(pngname) + "/"
-            basename = os.path.basename(pngname)
-            pngname, extname = os.path.splitext(basename)
-        pngname = create_tempnum(pngname, dirname, ".png")
-        self.fig.savefig(pngname)
-
-    def Show(self):
-        try:
-            plt.show()
-        except AttributeError:
-            pass
-
-
-class plot3d (SetDir):
+class plot3d (PlotBase):
 
     def __init__(self):
-        SetDir.__init__(self)
+        PlotBase.__init__(self)
+        self.dim = 3
         self.new_fig()
-
-    def new_fig(self):
-        self.fig = plt.figure()
-        self.axs = self.fig.add_subplot(111, projection='3d')
-        #self.axs = self.fig.gca(projection='3d')
-        # self.axs.set_aspect('equal')
-
-        self.axs.set_xlabel('x')
-        self.axs.set_ylabel('y')
-        self.axs.set_zlabel('z')
-
-        self.axs.xaxis.grid()
-        self.axs.yaxis.grid()
-        self.axs.zaxis.grid()
 
     def set_axes_equal(self):
         '''
@@ -228,28 +248,6 @@ class plot3d (SetDir):
         #self.axs.set_xlim3d(-10, 10)
         #self.axs.set_ylim3d(-10, 10)
         #self.axs.set_zlim3d(-10, 10)
-
-    def SavePng(self, pngname=None):
-        if pngname == None:
-            pngname = self.tmpdir + self.rootname + ".png"
-        self.fig.savefig(pngname)
-
-    def SavePng_Serial(self, pngname=None):
-        if pngname == None:
-            pngname = self.rootname
-            dirname = self.tmpdir
-        else:
-            dirname = os.path.dirname(pngname) + "/"
-            basename = os.path.basename(pngname)
-            pngname, extname = os.path.splitext(basename)
-        pngname = create_tempnum(pngname, dirname, ".png")
-        self.fig.savefig(pngname)
-
-    def Show(self):
-        try:
-            plt.show()
-        except AttributeError:
-            pass
 
 
 def pnt_trf_vec(pnt=gp_Pnt(), vec=gp_Vec()):
