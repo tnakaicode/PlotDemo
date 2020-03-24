@@ -15,7 +15,7 @@ import sys
 from base import plot3d, plotocc
 
 if __name__ == "__main__":
-    imax = 10000
+    imax = 5*10**4
     x = 0.5
     y = 0.0
     z = -0.2

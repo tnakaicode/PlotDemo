@@ -94,13 +94,13 @@ class PlotBase(SetDir):
 
     def new_fig(self, aspect="equal", dim=None):
         if dim == None:
-            self.new_fig(aspect=aspect, dim=self.dim)
+            self.new_fig(aspect=aspect, dim=dim)
         elif self.dim == 2:
-            self.new_3Dfig()
+            self.new_2Dfig(aspect=aspect)
         elif self.dim == 3:
-            self.new_3Dfig()
+            self.new_3Dfig(aspect=aspect)
         else:
-            self.new_2Dfig()
+            self.new_2Dfig(aspect=aspect)
 
     def new_2Dfig(self, aspect="equal"):
         self.fig, self.axs = plt.subplots()
@@ -150,7 +150,7 @@ class plot2d (PlotBase):
     def __init__(self, aspect="equal"):
         PlotBase.__init__(self)
         self.dim = 2
-        self.new_fig(aspect)
+        self.new_fig(aspect, self.dim)
 
     def add_axs(self, row=1, col=1, num=1, aspect="auto"):
         self.axs.set_axis_off()
