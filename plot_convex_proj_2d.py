@@ -68,4 +68,5 @@ class ConvexArea (plotocc):
 
 if __name__ == '__main__':
     obj = ConvexArea(num=50)
+    obj.SaveMenu()
     obj.show()

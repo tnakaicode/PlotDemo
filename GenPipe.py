@@ -34,4 +34,4 @@ class PipePlot(plot2d):
 
 if __name__ == "__main__":
     obj = PipePlot()
-    obj.Show()
+    obj.SavePng()
