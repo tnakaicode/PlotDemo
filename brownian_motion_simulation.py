@@ -49,20 +49,20 @@ def brownian_displacement_display(k, n, m, d, t, dsq):
     #  Get the T values.
     #
     tvec = np.linspace(0, t, n)
-#
-#  Select 5 random trajectories for display.
-#
+    #
+    #  Select 5 random trajectories for display.
+    #
     for s in range(0, 5):
         i = int(k * np.random.rand(1))
         plt.plot(tvec, dsq[i, :], 'b-')
-#
-#  Display the average displacement.
-#
+    #
+    #  Display the average displacement.
+    #
     dsq_ave = np.sum(dsq, 0) / float(k)
     plt.plot(tvec, dsq_ave, 'r-', linewidth=2)
-#
-#  Display the ideal displacment.
-#
+    #
+    #  Display the ideal displacment.
+    #
     dsq_ideal = 2.0 * m * d * tvec
     plt.plot(tvec, dsq_ideal, 'k-', linewidth=3)
 
@@ -172,7 +172,7 @@ def brownian_motion_display(m, n, x):
         y = np.linspace(0, n - 1, n) / float(n - 1)
         plt.plot(x[0, :], y[:], 'b', linewidth=2)
         plt.plot(x[0, 0], y[0], 'g.', markersize=35)
-        plt.plot(x[0, n-1], y[n-1], 'r.', markersize=35)
+        plt.plot(x[0, n - 1], y[n - 1], 'r.', markersize=35)
         plt.grid(True)
         plt.xlabel('<--X-->')
         plt.ylabel('<--Time-->')
@@ -186,7 +186,7 @@ def brownian_motion_display(m, n, x):
 
         plt.plot(x[0, :], x[1, :], 'b', LineWidth=2)
         plt.plot(x[0, 0], x[1, 0], 'g.', markersize=35)
-        plt.plot(x[0, n-1], x[1, n-1], 'r.', markersize=35)
+        plt.plot(x[0, n - 1], x[1, n - 1], 'r.', markersize=35)
         plt.grid(True)
         plt.xlabel('<--X-->')
         plt.ylabel('<--Y-->')
@@ -196,17 +196,18 @@ def brownian_motion_display(m, n, x):
         plt.savefig(filename)
         plt.show()
         plt.clf()
-#
-#  May I just say that I am struck by the inconsistency between 2D and 3D
-#  plotting?
-#
+        #
+        #  May I just say that I am struck by the inconsistency between 2D and 3D
+        #  plotting?
+        #
     elif (m == 3):
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         ax.plot(x[0, :], x[1, :], x[2, :], 'b', linewidth=2)
         ax.scatter(x[0, 0], x[1, 0], x[2, 0], c='g', marker='o', s=100)
-        ax.scatter(x[0, n-1], x[1, n-1], x[2, n-1], c='r', marker='o', s=100)
+        ax.scatter(x[0, n - 1], x[1, n - 1],
+                   x[2, n - 1], c='r', marker='o', s=100)
         ax.grid(True)
         ax.set_xlabel('<--X-->')
         ax.set_ylabel('<--Y-->')
@@ -278,9 +279,9 @@ def brownian_motion_simulation(m=2, n=1001, d=10.0, t=1.0):
     #  Set the time step.
     #
     dt = t / float(n - 1)
-#
-#  Compute the individual steps.
-#
+    #
+    #  Compute the individual steps.
+    #
     x = np.zeros([m, n])
 
     for j in range(1, n):
@@ -288,9 +289,9 @@ def brownian_motion_simulation(m=2, n=1001, d=10.0, t=1.0):
         #  S is the stepsize
         #
         s = np.sqrt(2.0 * m * d * dt) * np.random.randn(1)
-#
-#  Direction is random.
-#
+        #
+        #  Direction is random.
+        #
         if (m == 1):
             dx = s * np.ones(1)
         else:
@@ -298,10 +299,10 @@ def brownian_motion_simulation(m=2, n=1001, d=10.0, t=1.0):
             norm_dx = np.sqrt(np.sum(dx ** 2))
             for i in range(0, m):
                 dx[i] = s * dx[i] / norm_dx
-#
-#  Each position is the sum of the previous steps.
-#
-        x[0:m, j] = x[0:m, j-1] + dx[0:m]
+                #
+                #  Each position is the sum of the previous steps.
+                #
+        x[0:m, j] = x[0:m, j - 1] + dx[0:m]
 
     return x
 
@@ -328,19 +329,19 @@ def brownian_motion_simulation_test():
     print('BROWNIAN_MOTION_SIMULATION_TEST')
     print('  Python version')
     print('  Test the BROWNIAN_MOTION_SIMULATION library.')
-#
-#  Compute the path of a particle undergoing Brownian motion.
-#
+    #
+    #  Compute the path of a particle undergoing Brownian motion.
+    #
     for m in range(1, 4):
         n = 1001
         d = 10.0
         t = 1.0
         x = brownian_motion_simulation(m, n, d, t)
         brownian_motion_display(m, n, x)
-#
-#  Estimate the average displacement of the particle from the origin
-#  as a function of time.
-#
+        #
+        #  Estimate the average displacement of the particle from the origin
+        #  as a function of time.
+        #
     for m in range(1, 4):
         k = 40
         n = 1001
@@ -349,9 +350,9 @@ def brownian_motion_simulation_test():
 
         dsq = brownian_displacement_simulation(k, n, m, d, t)
         brownian_displacement_display(k, n, m, d, t, dsq)
-#
-#  Terminate.
-#
+    #
+    #  Terminate.
+    #
     print('')
     print('BROWNIAN_MOTION_SIMULATION_TEST')
     print('  Normal end of execution.')

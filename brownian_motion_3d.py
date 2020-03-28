@@ -330,19 +330,19 @@ def brownian_motion_simulation_test():
     print('BROWNIAN_MOTION_SIMULATION_TEST')
     print('  Python version')
     print('  Test the BROWNIAN_MOTION_SIMULATION library.')
-#
-#  Compute the path of a particle undergoing Brownian motion.
-#
+    #
+    #  Compute the path of a particle undergoing Brownian motion.
+    #
     m = 1
     n = 1001
     d = 10.0
     t = 1.0
     x = brownian_motion_simulation(m, n, d, t)
     brownian_motion_display(m, n, x)
-#
-#  Estimate the average displacement of the particle from the origin
-#  as a function of time.
-#
+    #
+    #  Estimate the average displacement of the particle from the origin
+    #  as a function of time.
+    #
     k = 40
     n = 1001
     d = 10.0
