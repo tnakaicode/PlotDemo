@@ -636,6 +636,7 @@ class plotocc (SetDir):
     def show(self):
         self.display.FitAll()
         self.display.View.Dump(self.tempname + ".png")
+        self.export_cap()
         self.start_display()
 
 

@@ -5,7 +5,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import hsv_to_rgb
 
 
-def func_vals(f, re, im, N):  # evaluates the complex function at the nodes of the grid
+def func_vals(f, re, im, N):
+    # evaluates the complex function at the nodes of the grid
     # re and im are  tuples, re=(a, b) and im=(c, d), defining the rectangular region
     # N is the number of discrete points per unit interval
 
@@ -20,12 +21,14 @@ def func_vals(f, re, im, N):  # evaluates the complex function at the nodes of t
     return f(z)
 
 
-def Hcomplex(z):  # computes the hue corresponding to the complex number z
+def Hcomplex(z):
+    # computes the hue corresponding to the complex number z
     H = np.angle(z) / (2 * np.pi) + 1
     return np.mod(H, 1)
 
 
-def domaincol_c(w, s):  # Classical domain coloring
+def domaincol_c(w, s):
+    # Classical domain coloring
     # w is the complex array of values f(z)
     # s is the constant saturation
 
@@ -103,7 +106,6 @@ def domain_coloring_plot(func):
 
 plt.figure()
 domain_coloring_plot(numpy_sqrt)
-plt.show()
 
 theta = np.linspace(0, 2 * np.pi, num=26, endpoint=False)
 unit_circle = [np.exp(1j * _) for _ in theta]
@@ -130,8 +132,6 @@ def plot_along_curve(func=numpy_sqrt, param=theta, curve=unit_circle):
 plt.figure(figsize=(10, 5))
 plot_along_curve()
 
-plt.show()
-
 
 def square_root(z, theta):
     "Square root with different branch cut defined by alpha parameter."
@@ -149,7 +149,6 @@ argand_plot(normal_sqrt)
 
 plt.figure()
 domain_coloring_plot(normal_sqrt)
-plt.show()
 
 
 def real_pos_sqrt(z): return square_root(z, 2 * np.pi)
@@ -157,9 +156,9 @@ def real_pos_sqrt(z): return square_root(z, 2 * np.pi)
 
 plt.figure()
 argand_plot(real_pos_sqrt)
+
 plt.figure()
 domain_coloring_plot(real_pos_sqrt)
-plt.show()
 
 
 def imag_neg_sqrt(z): return square_root(z, np.pi / 2)
@@ -167,11 +166,12 @@ def imag_neg_sqrt(z): return square_root(z, np.pi / 2)
 
 plt.figure()
 argand_plot(imag_neg_sqrt)
+
 plt.figure()
 domain_coloring_plot(imag_neg_sqrt)
+
 plt.figure(figsize=(10, 5))
 plot_along_curve(func=imag_neg_sqrt)
-plt.show()
 
 
 def angle_sqrt(z): return square_root(z, -np.pi / 4)
@@ -179,6 +179,7 @@ def angle_sqrt(z): return square_root(z, -np.pi / 4)
 
 plt.figure()
 argand_plot(angle_sqrt)
+
 plt.figure()
 domain_coloring_plot(angle_sqrt)
 plt.figure(figsize=(10, 5))
