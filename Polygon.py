@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 
 from OCC.Core.BRepBuilderAPI import (BRepBuilderAPI_MakeFace,
-                                BRepBuilderAPI_MakePolygon,
-                                BRepBuilderAPI_MakeShell,
-                                BRepBuilderAPI_MakeSolid)
+                                     BRepBuilderAPI_MakePolygon,
+                                     BRepBuilderAPI_MakeShell,
+                                     BRepBuilderAPI_MakeSolid)
 from OCC.Core.GeomAPI import GeomAPI_Interpolate, GeomAPI_PointsToBSpline
 from OCC.Core.GeomLib import GeomLib_Interpolate
 from OCC.Core.Geom import Geom_BSplineCurve
@@ -43,7 +43,8 @@ class GenPolygon (plotocc):
 
     def __init__(self):
         plotocc.__init__(self)
-        self.gen_area()
+        self.gen_area(num=20)
+        print(self.cov)
 
         for idx in self.cov.simplices:
             self.tri_plane(idx)
@@ -96,7 +97,7 @@ class GenPolygon (plotocc):
         api = GeomLib_Interpolate(0, 4, pts, wgt)
         crv = api.Curve()
         print(crv)
-        #self.display.DisplayShape(crv)
+        # self.display.DisplayShape(crv)
 
 
 if __name__ == '__main__':
