@@ -16,7 +16,7 @@ from base import plot2d
 
 # Grid parameters
 Nxmax = 100
-Nymax = 20
+Nymax = 75
 
 # Stream
 u = np.zeros((Nxmax + 1, Nymax + 1), float)
@@ -30,9 +30,9 @@ omega = 0.1
 # Geometry
 IL = 10
 
-H = 8
-T = 8
-h = 1.
+H = 10
+T = 15
+h = 2.
 # Viscosity
 nu = 1.
 
@@ -63,10 +63,11 @@ def borders():
         if i <= IL and i >= IL + T:
             u[i, 0] = 0.
             w[i, 0] = 0.
+
     # Outlet
     for j in range(1, Nymax):
         w[Nxmax, j] = w[Nxmax - 1, j]
-        u[Nxmax, j] = u[Nxmax - 1, j]  # Borders
+        u[Nxmax, j] = u[Nxmax - 1, j]
 
 
 def beam():
@@ -133,11 +134,12 @@ obj = plot2d()
 img = obj.axs.contourf(u, origin='lower', cmap="jet")
 obj.axs.set_title('Stream function - 2D Flow over a beam')
 obj.fig.colorbar(img)
-obj.fig.savefig(obj.tmpdir + obj.rootname + "-Stream.png")
+obj.SavePng_Serial(obj.tempname + "-Stream.png")
+obj.SavePng(obj.tempname + "-Stream.png")
 
 obj.new_fig()
 img = obj.axs.contourf(w, origin='lower', cmap="jet")
 obj.axs.set_title('Vorticity - 2D Flow over a beam')
 obj.fig.colorbar(img)
-obj.fig.savefig(obj.tmpdir + obj.rootname + "-Velocity.png")
-plt.show()
+obj.SavePng_Serial(obj.tempname + "-Velocity.png")
+obj.SavePng(obj.tempname + "-Velocity.png")

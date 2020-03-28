@@ -48,7 +48,7 @@ class ConvexArea (plotocc):
             print(xyz)
             self.show_pnt(xyz)
 
-        print(self.cov)
+        # print(self.cov)
         print(self.cov.vertices, len(self.cov.vertices))
         h_pts = TColgp_Array1OfPnt(1, len(self.cov.vertices) + 1)
         h_par = TColStd_Array1OfReal(1, len(self.cov.vertices) + 1)
@@ -68,4 +68,5 @@ class ConvexArea (plotocc):
 
 if __name__ == '__main__':
     obj = ConvexArea(num=50)
+    obj.SaveMenu()
     obj.show()
