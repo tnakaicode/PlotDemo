@@ -59,6 +59,7 @@ class DrawCurve (plotocc):
 
     def __init__(self):
         plotocc.__init__(self)
+        self.SaveMenu()
         self.pt1 = gp_Pnt2d(0., 0.)
         self.pt2 = gp_Pnt2d(0., 120.)
         self.hit = 100.

@@ -20,9 +20,10 @@ from base import plot2d, plot3d, plotocc
 from base import gen_ellipsoid, set_trf
 
 
-class BrownMotion (object):
+class BrownMotion (plotocc):
 
     def __init__(self, axs=gp_Ax3()):
+        plotocc.__init__(self)
         self.dm = 3
         self.nx = 200
         self.px = np.zeros([self.dm, self.nx])
@@ -94,25 +95,24 @@ class BrownMotion (object):
         print(*np.random.randn(self.dm))
         print(*np.random.randn(self.dm))
         print(*np.random.randn(self.dm))
-        plt.show()
+        obj.SavePng_Serial()
 
     def plot_occ(self):
-        obj = plotocc()
-        obj.show_pnt([self.rxyz[0], 0, 0])
-        obj.show_pnt([0, self.rxyz[1], 0])
-        obj.show_pnt([0, 0, self.rxyz[2]])
-        obj.display.DisplayShape(self.ellp, transparency=0.5, color="BLUE")
+        self.show_pnt([self.rxyz[0], 0, 0])
+        self.show_pnt([0, self.rxyz[1], 0])
+        self.show_pnt([0, 0, self.rxyz[2]])
+        self.display.DisplayShape(self.ellp, transparency=0.5, color="BLUE")
         print(*self.rand_point())
         for t in self.pt:
-            obj.show_pnt(self.rand_point())
+            self.show_pnt(self.rand_point())
         #obj.show_ball(scale=self.rxyz[0], trans=0.9)
         #obj.show_ball(scale=self.rxyz[1], trans=0.8)
         #obj.show_ball(scale=self.rxyz[2], trans=0.7)
-        obj.show_axs_pln(scale=self.r_min)
-        obj.display.View.Dump(obj.tmpdir + "BrownMotion.png")
-        obj.show()
+        self.show_axs_pln(scale=self.r_min)
+        self.show()
 
 
 if __name__ == '__main__':
     obj = BrownMotion()
+    obj.plot_plt3d()
     obj.plot_occ()
