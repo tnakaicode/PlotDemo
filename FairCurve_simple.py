@@ -14,6 +14,7 @@ from OCC.Core.gp import gp_Pnt2d
 from OCC.Core.Geom import Geom_Plane
 from OCC.Core.FairCurve import FairCurve_MinimalVariation
 from OCC.Core.FairCurve import FairCurve_Newton
+from OCC.Core.FairCurve import FairCurve_EnergyOfMVC
 from OCC.Core.math import math_NewtonMinimum, math_GaussSingleIntegration
 from OCC.Core.FEmTool import FEmTool_ProfileMatrix, FEmTool_SparseMatrix
 from OCC.Core.BOPTools import BOPTools_AlgoTools2D
@@ -62,7 +63,7 @@ class DrawCurve (plotocc):
         self.SaveMenu()
         self.pt1 = gp_Pnt2d(0., 0.)
         self.pt2 = gp_Pnt2d(0., 120.)
-        self.hit = 100.
+        self.hit = 200.
         self.pln = Geom_Plane(gp_Pln())
 
         self.fc_MinVar = FairCurve_MinimalVariation(
@@ -80,9 +81,9 @@ class DrawCurve (plotocc):
         self.fc_MinVar.SetPhysicalRatio(0.5)
         stat = self.fc_MinVar.Compute()
 
-        for i in range(0, 20):
+        for i in range(0, 150):
             # TODO: the parameter slope needs to be visualized
-            slope = i / 20.
+            slope = i / 100.
             self.fc_MinVar.SetAngle1(np.deg2rad(i))
             self.fc_MinVar.SetAngle2(np.deg2rad(-i))
             self.fc_MinVar.SetSlope(slope)
