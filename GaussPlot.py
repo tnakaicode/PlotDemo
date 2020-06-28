@@ -64,6 +64,7 @@ if __name__ == "__main__":
     func = gauss_2d_skew(mesh, [sx, sy], [wx, wy], [kx, ky], deg=30)
     peak = gauss_2d_skew(mesh, [sx, sy], [1.0, 2.0], [kx, ky], deg=0)
 
-    plot_contour_sub(mesh, func, loc=[sx, sy], pngfile="../tmp/gauss")
+    plot_contour_sub(mesh, func,
+                     loc=[sx, sy], dirname="./tmp/gauss")
     plot_contour_sub(mesh, func + peak,
-                     loc=[sx, sy], pngfile="../tmp/gauss_peak")
+                     loc=[sx, sy], dirname="./tmp/gauss_peak")
