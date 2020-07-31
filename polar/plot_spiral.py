@@ -10,7 +10,7 @@ import datetime
 from optparse import OptionParser
 
 sys.path.append(os.path.join('../'))
-from base import plot2d, plotpolar
+from base import plot2d
 
 
 class SpiralPlot (plot2d):
