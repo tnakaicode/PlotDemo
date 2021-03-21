@@ -38,4 +38,5 @@ def update(i):
 
 ani = matplotlib.animation.FuncAnimation(fig, update, frames=len(alpha),
                                          interval=10, blit=True, repeat=True)
+ani.save("./contour_animate.gif")
 plt.show()

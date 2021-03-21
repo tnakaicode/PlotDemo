@@ -1,15 +1,11 @@
 # Figures 8.3 and 8.4, pages 412 and 416.
 # Ellipsoidal approximations.
 
+import numpy as np
+import matplotlib.pyplot as plt
 from math import log, pi
 from cvxopt import blas, lapack, solvers, matrix, sqrt, mul, cos, sin
 solvers.options['show_progress'] = False
-try:
-    import pylab
-except ImportError:
-    pylab_installed = False
-else:
-    pylab_installed = True
 
 # Extreme points (with first one appended at the end)
 X = matrix([0.55, 0.25, -0.20, -0.25, 0.00, 0.40, 0.55,
@@ -107,32 +103,31 @@ sol = solvers.cp(F)
 A = matrix(sol['x'][[0, 1, 1, 2]], (2, 2))
 b = sol['x'][3:]
 
-if pylab_installed:
-    pylab.figure(1, facecolor='w')
-    pylab.plot(X[:, 0], X[:, 1], 'ko', X[:, 0], X[:, 1], '-k')
+plt.figure(1, facecolor='w')
+plt.plot(X[:, 0], X[:, 1], 'ko', X[:, 0], X[:, 1], '-k')
 
-    # Ellipsoid in the form { x | || L' * (x-c) ||_2 <= 1 }
-    L = +A
-    lapack.potrf(L)
-    c = +b
-    lapack.potrs(L, c)
+# Ellipsoid in the form { x | || L' * (x-c) ||_2 <= 1 }
+L = +A
+lapack.potrf(L)
+c = +b
+lapack.potrs(L, c)
 
-    # 1000 points on the unit circle
-    nopts = 1000
-    angles = matrix([a * 2.0 * pi / nopts for a in range(nopts)], (1, nopts))
-    circle = matrix(0.0, (2, nopts))
-    circle[0, :], circle[1, :] = cos(angles), sin(angles)
+# 1000 points on the unit circle
+nopts = 1000
+angles = matrix([a * 2.0 * pi / nopts for a in range(nopts)], (1, nopts))
+circle = matrix(0.0, (2, nopts))
+circle[0, :], circle[1, :] = cos(angles), sin(angles)
 
-    # ellipse = L^-T * circle + c
-    blas.trsm(L, circle, transA='T')
-    ellipse = circle + c[:, nopts * [0]]
-    ellipse2 = 0.5 * circle + c[:, nopts * [0]]
+# ellipse = L^-T * circle + c
+blas.trsm(L, circle, transA='T')
+ellipse = circle + c[:, nopts * [0]]
+ellipse2 = 0.5 * circle + c[:, nopts * [0]]
 
-    pylab.plot(ellipse[0, :].T, ellipse[1, :].T, 'k-')
-    pylab.fill(ellipse2[0, :].T, ellipse2[1, :].T, facecolor='#F0F0F0')
-    pylab.title('Loewner-John ellipsoid (fig 8.3)')
-    pylab.axis('equal')
-    pylab.axis('off')
+plt.plot(ellipse[0, :].T, ellipse[1, :].T, 'k-')
+plt.fill(ellipse2[0, :].T, ellipse2[1, :].T, facecolor='#F0F0F0')
+plt.title('Loewner-John ellipsoid (fig 8.3)')
+plt.axis('equal')
+plt.axis('off')
 
 
 # Maximum volume enclosed ellipsoid
@@ -210,29 +205,27 @@ sol = solvers.cp(F)
 L = matrix([sol['x'][0], sol['x'][1], 0.0, sol['x'][2]], (2, 2))
 c = matrix([sol['x'][3], sol['x'][4]])
 
-if pylab_installed:
-    pylab.figure(2, facecolor='w')
+plt.figure(2, facecolor='w')
 
-    # polyhedron
-    for k in range(m):
-        edge = X[[k, k + 1], :] + 0.1 * matrix([1., 0., 0., -1.], (2, 2)) * \
-            (X[2 * [k], :] - X[2 * [k + 1], :])
-        pylab.plot(edge[:, 0], edge[:, 1], 'k')
+# polyhedron
+for k in range(m):
+    edge = X[[k, k + 1], :] + 0.1 * matrix([1., 0., 0., -1.], (2, 2)) * \
+        (X[2 * [k], :] - X[2 * [k + 1], :])
+    plt.plot(edge[:, 0], edge[:, 1], 'k')
 
-    # 1000 points on the unit circle
-    nopts = 1000
-    angles = matrix([a * 2.0 * pi / nopts for a in range(nopts)], (1, nopts))
-    circle = matrix(0.0, (2, nopts))
-    circle[0, :], circle[1, :] = cos(angles), sin(angles)
+# 1000 points on the unit circle
+nopts = 1000
+angles = matrix([a * 2.0 * pi / nopts for a in range(nopts)], (1, nopts))
+circle = matrix(0.0, (2, nopts))
+circle[0, :], circle[1, :] = cos(angles), sin(angles)
 
-    # ellipse = L * circle + c
-    ellipse = L * circle + c[:, nopts * [0]]
-    ellipse2 = 2.0 * L * circle + c[:, nopts * [0]]
+# ellipse = L * circle + c
+ellipse = L * circle + c[:, nopts * [0]]
+ellipse2 = 2.0 * L * circle + c[:, nopts * [0]]
 
-    pylab.plot(ellipse2[0, :].T, ellipse2[1, :].T, 'k-')
-    pylab.fill(ellipse[0, :].T, ellipse[1, :].T, facecolor='#F0F0F0')
-    pylab.title('Maximum volume inscribed ellipsoid (fig 8.4)')
-    pylab.axis('equal')
-    pylab.axis('off')
-
-    pylab.show()
+plt.plot(ellipse2[0, :].T, ellipse2[1, :].T, 'k-')
+plt.fill(ellipse[0, :].T, ellipse[1, :].T, facecolor='#F0F0F0')
+plt.title('Maximum volume inscribed ellipsoid (fig 8.4)')
+plt.axis('equal')
+plt.axis('off')
+plt.show()
