@@ -57,11 +57,12 @@ if __name__ == '__main__':
     pts = np.array(nxy) - np.array(nxy).min(axis=0)
     mask = np.zeros(original_frame.shape, np.uint8)
     cv2.drawContours(mask, [pts], -1, (255, 255, 255), -1, cv2.LINE_AA)
-    #cv2.fillPoly( original_frame , pts )
-    #result = cv2.bitwise_and(original_frame, mask)
-    #res_data = np.asanyarray(result)
-    # print(res_data.shape())
-    #cv2.imwrite(obj.tempname + "-xxx.png", result)
+    mask = cv2.fillConvexPoly(original_frame, np.array(
+        pts, "int32"), color=(255, 255, 255))
+    result = original_frame * mask
+    res_data = np.asanyarray(result)
+    print(res_data)
+    cv2.imwrite(obj.tempname + "-xxx.png", result)
 
     obj.new_2Dfig()
-    obj.contourf_div(mesh, mask, pngname=obj.tempname + "-mask.png")
+    obj.contourf_div(mesh, mask, pngname=obj.tempname)

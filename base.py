@@ -221,6 +221,15 @@ class plot2d (PlotBase):
         self.ax_y.xaxis.grid(True, zorder=0)
         self.ax_y.yaxis.grid(True, zorder=0)
 
+    def sxy_to_nxy(self, mesh, sxy=[0, 0]):
+        sx, sy = sxy
+        nx, ny = mesh[0].shape
+        xs, ys = mesh[0][0, 0], mesh[1][0, 0]
+        xe, ye = mesh[0][0, -1], mesh[1][-1, 0]
+        dx, dy = mesh[0][0, 1] - mesh[0][0, 0], mesh[1][1, 0] - mesh[1][0, 0]
+        mx, my = int((sy - ys) / dy), int((sx - xs) / dx)
+        return [mx, my]
+
     def contourf_sub(self, mesh, func, sxy=[0, 0], pngname=None):
         self.new_fig()
         self.div_axs()
@@ -445,7 +454,7 @@ class GenCompound (object):
     def __init__(self):
         self.builder = BRep_Builder()
         self.compound = TopoDS_Compound()
-        self.builder.MakeCompound(compound)
+        self.builder.MakeCompound(self.compound)
 
 
 class plotocc (SetDir):
@@ -597,10 +606,10 @@ class plotocc (SetDir):
         cov = ConvexHull(pnt, qhull_options='QJ')
 
         #pts_ord = []
-        #print(cov)
-        #print(cov.simplices)
-        #print(cov.vertices)
-        #for idx in cov.vertices:
+        # print(cov)
+        # print(cov.simplices)
+        # print(cov.vertices)
+        # for idx in cov.vertices:
         #    print(idx, pnt[idx])
         #    pts_ord.append(gp_Pnt(*pnt[idx]))
 
