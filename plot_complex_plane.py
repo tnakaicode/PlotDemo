@@ -68,9 +68,6 @@ def plot_domain(color_func, f, re=[-1, 1], im=[-1, 1], title='',
         plt.axis('off')
 
 
-plt.style.use('seaborn-white')
-
-
 def numpy_sqrt(z):
     "Complex square root function."
     return np.sqrt(z)
@@ -144,6 +141,15 @@ def square_root(z, theta):
 def normal_sqrt(z): return square_root(z, np.pi)
 
 
+def real_pos_sqrt(z): return square_root(z, 2 * np.pi)
+
+
+def imag_neg_sqrt(z): return square_root(z, np.pi / 2)
+
+
+def angle_sqrt(z): return square_root(z, -np.pi / 4)
+
+
 plt.figure()
 argand_plot(normal_sqrt)
 
@@ -151,17 +157,11 @@ plt.figure()
 domain_coloring_plot(normal_sqrt)
 
 
-def real_pos_sqrt(z): return square_root(z, 2 * np.pi)
-
-
 plt.figure()
 argand_plot(real_pos_sqrt)
 
 plt.figure()
 domain_coloring_plot(real_pos_sqrt)
-
-
-def imag_neg_sqrt(z): return square_root(z, np.pi / 2)
 
 
 plt.figure()
@@ -172,9 +172,6 @@ domain_coloring_plot(imag_neg_sqrt)
 
 plt.figure(figsize=(10, 5))
 plot_along_curve(func=imag_neg_sqrt)
-
-
-def angle_sqrt(z): return square_root(z, -np.pi / 4)
 
 
 plt.figure()
