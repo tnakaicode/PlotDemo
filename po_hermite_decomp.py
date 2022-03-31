@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import sys
 import os
 import time
-from optparse import OptionParser
+import argparse
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.special import hermite
 from scipy.integrate import simps
@@ -46,18 +46,18 @@ def hermite_func(mesh, wxy=[0.1, 0.1], cfgtxt="./po_hermite.txt"):
 
 if __name__ == "__main__":
     argvs = sys.argv
-    parser = OptionParser()
-    parser.add_option("--dir", dest="dir", default="./")
-    parser.add_option("--lxy", dest="lxy",
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dir", dest="dir", default="./")
+    parser.add_argument("--lxy", dest="lxy",
                       default=[1.0, 0.5], type="float", nargs=2)
-    parser.add_option("--dxy", dest="dxy",
+    parser.add_argument("--dxy", dest="dxy",
                       default=[0.01, 0.01], type="float", nargs=2)
-    parser.add_option("--wxy", dest="wxy",
+    parser.add_argument("--wxy", dest="wxy",
                       default=[0.1, 0.1], type="float", nargs=2)
-    parser.add_option("--nxy", dest="nxy",
+    parser.add_argument("--nxy", dest="nxy",
                       default=[500, 600], type="int", nargs=2)
-    opt, argc = parser.parse_args(argvs)
-    print(opt, argc)
+    opt = parser.parse_args()
+    print(opt, argvs)
 
     nxy = opt.nxy
     lxy = opt.lxy

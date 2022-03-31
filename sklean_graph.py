@@ -6,7 +6,7 @@ import time
 from sklearn.datasets import load_iris
 from sklearn import tree
 from linecache import getline, clearcache
-from optparse import OptionParser
+import argparse
 
 sys.path.append(os.path.join("./"))
 from base import plot2d, plot3d
@@ -16,12 +16,12 @@ logging.getLogger('matplotlib').setLevel(logging.ERROR)
 
 if __name__ == '__main__':
     argvs = sys.argv
-    parser = OptionParser()
-    parser.add_option("--dir", dest="dir", default="./")
-    parser.add_option("--pxyz", dest="pxyz",
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dir", dest="dir", default="./")
+    parser.add_argument("--pxyz", dest="pxyz",
                       default=[0.0, 0.0, 0.0], type="float", nargs=3)
-    opt, argc = parser.parse_args(argvs)
-    print(opt, argc)
+    opt = parser.parse_args()
+    print(opt, argvs)
 
     obj = plot2d(aspect="equal")
 

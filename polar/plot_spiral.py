@@ -7,7 +7,7 @@ import os
 import glob
 import shutil
 import datetime
-from optparse import OptionParser
+import argparse
 
 sys.path.append(os.path.join('../'))
 from base import plot2d
@@ -42,10 +42,10 @@ class SpiralPlot (plot2d):
 
 if __name__ == '__main__':
     argvs = sys.argv
-    parser = OptionParser()
-    parser.add_option("--flag", dest="flag", default=1, type="int")
-    opt, argc = parser.parse_args(argvs)
-    print(opt, argc)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--flag", dest="flag", default=1, type="int")
+    opt = parser.parse_args()
+    print(opt, argvs)
 
     obj = SpiralPlot()
     obj.SavePng()

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 import time
 import os
-from optparse import OptionParser
+import argparse
 
 sys.path.append(os.path.join('../'))
 from base import plot2d, plotpolar

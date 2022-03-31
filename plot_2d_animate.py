@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-from optparse import OptionParser
+import argparse
 from matplotlib import animation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
@@ -60,9 +60,9 @@ class Decay (plot2d):
 
 if __name__ == '__main__':
     argvs = sys.argv
-    parser = OptionParser()
-    opt, argc = parser.parse_args(argvs)
-    print(opt, argc)
+    parser = argparse.ArgumentParser()
+    opt = parser.parse_args()
+    print(opt, argvs)
 
     obj = Decay()
     obj.SaveGif()
