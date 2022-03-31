@@ -49,13 +49,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dir", dest="dir", default="./")
     parser.add_argument("--lxy", dest="lxy",
-                      default=[1.0, 0.5], type="float", nargs=2)
+                      default=[1.0, 0.5], type=float, nargs=2)
     parser.add_argument("--dxy", dest="dxy",
-                      default=[0.01, 0.01], type="float", nargs=2)
+                      default=[0.01, 0.01], type=float, nargs=2)
     parser.add_argument("--wxy", dest="wxy",
-                      default=[0.1, 0.1], type="float", nargs=2)
+                      default=[0.1, 0.1], type=float, nargs=2)
     parser.add_argument("--nxy", dest="nxy",
-                      default=[500, 600], type="int", nargs=2)
+                      default=[500, 600], type=int, nargs=2)
     opt = parser.parse_args()
     print(opt, argvs)
 

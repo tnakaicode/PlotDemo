@@ -43,7 +43,7 @@ class SpiralPlot (plot2d):
 if __name__ == '__main__':
     argvs = sys.argv
     parser = argparse.ArgumentParser()
-    parser.add_argument("--flag", dest="flag", default=1, type="int")
+    parser.add_argument("--flag", dest="flag", default=1, type=int)
     opt = parser.parse_args()
     print(opt, argvs)
 
