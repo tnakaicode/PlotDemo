@@ -1,5 +1,6 @@
 # Figures 8.3 and 8.4, pages 412 and 416.
 # Ellipsoidal approximations.
+# conda install -c conda-forge cvxopt
 
 import numpy as np
 import matplotlib.pyplot as plt
