@@ -3,7 +3,7 @@ import matplotlib.animation
 import numpy as np
 import time
 
-x = np.linspace(0, 3 * np.pi)
+x = np.linspace(-3 * np.pi, 3 * np.pi)
 X, Y = np.meshgrid(x, x)
 
 
@@ -17,26 +17,29 @@ levels = 10
 cmap = plt.cm.magma
 
 
-fig, ax = plt.subplots()
+fig, axs = plt.subplots()
 props = dict(boxstyle='round', facecolor='wheat')
-timelabel = ax.text(0.9, 0.9, "", transform=ax.transAxes,
-                    ha="right", bbox=props)
+timelabel = axs.text(0.85, 0.9, "", transform=axs.transAxes,
+                     ha="right", bbox=props)
 t = np.ones(10) * time.time()
-p = [ax.contourf(X, Y, f(X, Y, 0, 0), levels, cmap="jet")]
+p = [axs.contourf(X, Y, f(X, Y, 0, 0), levels, cmap="jet")]
 
 
 def update(i):
+    fig.clear()
+    axs = fig.add_subplot(111)
     for tp in p[0].collections:
         tp.remove()
-    p[0] = ax.contourf(X, Y, f(X, Y, alpha[i], alpha[i]), levels, cmap="jet")
+    p[0] = axs.contourf(X, Y, f(X, Y, alpha[i], alpha[i]), levels, cmap="jet")
     t[1:] = t[0:-1]
     t[0] = time.time()
-    timelabel.set_text("{:.3f} fps".format(-1. / np.diff(t).mean()))
-    # fig.colorbar(p[0])
+    axs.text(0.85, 0.9, "{:.3f} fps".format(-1. / np.diff(t).mean()),
+             transform=axs.transAxes, ha="right", bbox=props)
+    fig.colorbar(p[0])
     return p[0].collections + [timelabel]
 
 
 ani = matplotlib.animation.FuncAnimation(fig, update, frames=len(alpha),
                                          interval=10, blit=True, repeat=True)
-ani.save("./contour_animate.gif")
+ani.save("./img/contour_animate.gif")
 plt.show()
